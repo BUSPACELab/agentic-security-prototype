@@ -127,3 +127,12 @@ class System:
 
         # Perform the protected operation only after authorization succeeds
         return path.write_text(data, encoding="utf-8")
+
+    def remove_file(self, absolute_path, identity) -> None:
+        """Remove a file only after the application policy allows it."""
+
+        # Authorize MODIFY before changing the filesystem
+        path = self._authorize_modify(absolute_path, identity)
+
+        # Perform the protected operation only after authorization succeeds
+        path.unlink()
