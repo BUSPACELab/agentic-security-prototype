@@ -1,7 +1,6 @@
 """System module for enforcing application policies."""
 
 from pathlib import Path
-import shutil
 
 from .policy import FileSystemPolicy
 
@@ -151,4 +150,20 @@ class System:
             raise FileNotFoundError("Path is not a readable regular file.")
 
         # Perform the protected operation only after authorization succeeds
-        shutil.copyfile(source, destination)
+        source.copy(destination)
+
+    def move_file(self, source_path, destination_path, identity) -> None:
+        """Move a file only after the application policy allows it."""
+
+        # Authorize both resources before accessing or changing the filesystem
+        # The source must be readable and modifiable and the destination must be modifiable
+        source = self._authorize_read(source_path, identity)
+        source = self._authorize_modify(source_path, identity)
+        destination = self._authorize_modify(destination_path, identity)
+
+        # Ensure the source is a readable regular file before moving
+        if not source.is_file():
+            raise FileNotFoundError("Path is not a readable regular file.")
+
+        # Perform the protected operation only after authorization succeeds
+        source.move(destination)
