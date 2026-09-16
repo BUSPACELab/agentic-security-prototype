@@ -30,7 +30,7 @@ def read_file(path: str, user_id: int | str) -> str:
     return call_custom_mcp_tool("read_file",{"path": path, "user_id": user_id})
 
 
-def delete_file(path: str, user_id: int | str) -> bool:
+def delete_file(path: str, user_id: int | str) -> str:
     """Delete a file through the custom MCP server."""
 
     # Call the delete_file tool from the custom MCP server
@@ -87,7 +87,7 @@ def get_tools(user_id: int | str):
         return read_file(path, user_id)
 
     @tool("delete_file")
-    def delete_file_tool(path: str) -> bool:
+    def delete_file_tool(path: str) -> str:
         """Delete an uploaded file by path."""
 
         return delete_file(path, user_id)
