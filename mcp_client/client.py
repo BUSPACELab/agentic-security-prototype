@@ -79,6 +79,11 @@ def call_custom_mcp_tool(tool_name: str, arguments: dict) -> str:
     """Call one tool on the custom Python MCP server."""
 
     result = asyncio.run(_call_custom_tool(tool_name, arguments))
+
+    # If the result is an error raise an exception with the error message
+    if result.isError:
+        raise RuntimeError(_extract_text(result))
+    
     return _extract_text(result)
 
 

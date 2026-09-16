@@ -29,5 +29,6 @@ class ApplicationFilePolicy(FileSystemPolicy):
 
         # This application's users may modify files inside their own upload directory
         user_root = self._user_root(identity)
+        deleted_root = Path(settings.MCP_FILESYSTEM_ROOT) / "_deleted" / str(identity)
 
-        return is_path_within(absolute_path, user_root)
+        return is_path_within(absolute_path, user_root) or is_path_within(absolute_path, deleted_root)

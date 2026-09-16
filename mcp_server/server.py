@@ -22,18 +22,18 @@ mcp = FastMCP("Agentic Security Custom MCP Server")
 
 
 @mcp.tool()
-def list_files(path: str = "") -> str:
+def list_files(path: str, user_id: int | str) -> str:
     """
     List files and folders using the custom MCP server.
     """
-    return list_files_impl(path)
+    return list_files_impl(path, user_id)
 
 @mcp.tool()
-def search_files(query: str) -> str:
+def search_files(path: str, query: str, user_id: int | str) -> str:
     """
     Search files and folders using the custom MCP server.
     """
-    return search_files_impl(query)
+    return search_files_impl(path, query, user_id)
 
 
 @mcp.tool()
@@ -44,11 +44,11 @@ def read_file(path: str, user_id: int | str) -> str:
 
 
 @mcp.tool()
-def delete_file(path: str) -> str:
+def delete_file(path: str, user_id: int | str) -> bool:
     """
     Delete a file using the custom MCP server.
     """
-    return delete_file_impl(path)
+    return delete_file_impl(path, user_id)
 
 @mcp.tool()
 async def send_password_reset_email(
