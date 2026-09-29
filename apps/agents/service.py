@@ -71,13 +71,13 @@ General guidelines:
 """.strip()
 
 
-def run_agent(context, history, user):
+def run_agent(context, history):
     """Run one assistant response for the selected chat context."""
 
     # get chat model based on the choosen provider 
     model = get_chat_model()
     # get the allowed tools for the current context and user- for now it returns all tools 
-    tools = get_tools_for_context(context, user)
+    tools = get_tools_for_context(context)
     # bind the tools to the model so that it can use them when generating responses
     model = model.bind_tools(tools)
 

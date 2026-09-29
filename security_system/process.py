@@ -12,7 +12,7 @@ import time
 from collections.abc import Mapping
 from pathlib import Path
 from threading import Thread
-import sys
+
 
 from .context import (
     Principal,

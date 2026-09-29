@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from contextlib import AbstractContextManager
 from pathlib import Path
 
-from .context import Principal, SecurityContext, bind_security_context
+from .context import Principal, SecurityContext, bind_security_context, current_security_context
 from .policy import FileSystemPolicy
 from .process import child_process_environment, initialize_inherited_process_context
 
@@ -66,35 +66,41 @@ class System:
 
         return path
 
-    def _authorize_read(self, absolute_path, identity) -> Path:
+    def _authorize_read(self, absolute_path) -> Path:
         """Authorize the application's read policy."""
 
         # First enforce the System contract that resources are absolute
         path = self._require_absolute_path(absolute_path)
 
-        # The application decides whether this identity may read the resource
-        if self.policy.allows_read(identity, path) is not True:
+        # Get the trusted security context for the current execution
+        context = current_security_context()
+
+        # The application decides whether this context may read the resource
+        if self.policy.allows_read(context, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
 
-    def _authorize_modify(self, absolute_path, identity) -> Path:
+    def _authorize_modify(self, absolute_path) -> Path:
         """Authorize the application's modify policy."""
 
         # First enforce the System contract that resources are absolute
         path = self._require_absolute_path(absolute_path)
 
-        # The application decides whether this identity may modify the resource
-        if self.policy.allows_modify(identity, path) is not True:
+        # Get the trusted security context for the current execution
+        context = current_security_context()
+
+        # The application decides whether this context may modify the resource
+        if self.policy.allows_modify(context, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
 
-    def read_text(self, absolute_path, identity) -> str:
+    def read_text(self, absolute_path) -> str:
         """Read text only after the application policy allows it."""
 
         # Authorize READ before checking the resource type or accessing it
-        path = self._authorize_read(absolute_path, identity)
+        path = self._authorize_read(absolute_path)
 
         # read_text only operates on existing regular files
         if not path.is_file():
@@ -103,19 +109,22 @@ class System:
         # Perform the protected operation only after authorization succeeds
         return path.read_text(encoding="utf-8")
 
-    def list(self, absolute_path, identity, recursive: bool = False) -> list[Path]:
-        """List directory entries the application policy allows the identity to read."""
+    def list(self, absolute_path, recursive: bool = False) -> list[Path]:
+        """List directory entries the application policy allows the context to read."""
 
         # Authorize READ before checking the resource type or accessing it
-        path = self._authorize_read(absolute_path, identity)
+        path = self._authorize_read(absolute_path)
 
         # list only operates on existing directories
         if not path.is_dir():
             raise NotADirectoryError("Path is not a readable directory.")
 
+        # Use the current context when filtering entries
+        context = current_security_context()
+
         # Helper used to check whether an entry may be exposed
         def is_readable(entry: Path) -> bool:
-            return self.policy.allows_read(identity, entry) is True
+            return self.policy.allows_read(context, entry) is True
 
         readable_entries = []
 
@@ -156,32 +165,30 @@ class System:
             readable_entries,
             key=lambda item: item.as_posix().lower(),
         )
-
-    def write_text(self, absolute_path, identity, data: str) -> int:
+    def write_text(self, absolute_path, data: str) -> int:
         """Write text only after the application policy allows it."""
 
         # Authorize MODIFY before changing the filesystem
-        path = self._authorize_modify(absolute_path, identity)
+        path = self._authorize_modify(absolute_path)
 
         # Perform the protected operation only after authorization succeeds
         return path.write_text(data, encoding="utf-8")
 
-    def remove_file(self, absolute_path, identity) -> None:
+    def remove_file(self, absolute_path) -> None:
         """Remove a file only after the application policy allows it."""
 
         # Authorize MODIFY before changing the filesystem
-        path = self._authorize_modify(absolute_path, identity)
+        path = self._authorize_modify(absolute_path)
 
         # Perform the protected operation only after authorization succeeds
         path.unlink()
 
-    def copy_file(self, source_path, destination_path, identity) -> None:
+    def copy_file(self, source_path, destination_path) -> None:
         """Copy a file only after the application policy allows it."""
 
         # Authorize both resources before accessing or changing the filesystem
-        # The source must be readable and the destination must be modifiable
-        source = self._authorize_read(source_path, identity)
-        destination = self._authorize_modify(destination_path, identity)
+        source = self._authorize_read(source_path)
+        destination = self._authorize_modify(destination_path)
 
         # Ensure the source is a readable regular file before copying
         if not source.is_file():
@@ -190,14 +197,13 @@ class System:
         # Perform the protected operation only after authorization succeeds
         source.copy(destination)
 
-    def move_file(self, source_path, destination_path, identity) -> None:
+    def move_file(self, source_path, destination_path) -> None:
         """Move a file only after the application policy allows it."""
 
         # Authorize both resources before accessing or changing the filesystem
-        # The source must be readable and modifiable and the destination must be modifiable
-        source = self._authorize_read(source_path, identity)
-        source = self._authorize_modify(source_path, identity)
-        destination = self._authorize_modify(destination_path, identity)
+        source = self._authorize_read(source_path)
+        source = self._authorize_modify(source_path)
+        destination = self._authorize_modify(destination_path)
 
         # Ensure the source is a readable regular file before moving
         if not source.is_file():
