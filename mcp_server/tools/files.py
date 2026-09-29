@@ -15,31 +15,23 @@ from security_system.context import current_security_context
 from ..config import MCP_ROOT
 
 
-def build_mcp_path(path: str = "") -> Path:
-    """
-    Build a filesystem path using the configured MCP root.
-
-    Example:
-    users/10/a.txt -> /project/media/users/10/a.txt
-    """
-    return (MCP_ROOT / (path or "")).resolve()
-
-
-def _default_user_path(path: str = "") -> str:
-    """Return the provided path or the current user's root."""
-
-    if path:
-        return path
+def _default_user_path() -> str:
+    """Return the current user's path."""
 
     user_id = current_security_context().principal.subject
-
     return f"users/{user_id}"
+
+
+def build_mcp_path(path: str = "") -> Path:
+    """Build an absolute filesystem path."""
+
+    return (MCP_ROOT / (path or _default_user_path())).resolve()
 
 
 def list_files_impl(path: str = "") -> str:
     """List files and folders for a path."""
 
-    target_path = build_mcp_path(_default_user_path(path))
+    target_path = build_mcp_path(path)
 
     entries = system.list(target_path, recursive=True)
 
@@ -51,8 +43,7 @@ def search_files_impl(query: str) -> str:
 
     words = query.lower().strip().split()
 
-    user_id = current_security_context().principal.subject
-    target_path = build_mcp_path(f"users/{user_id}")
+    target_path = build_mcp_path()
 
     entries = system.list(target_path, recursive=True)
 

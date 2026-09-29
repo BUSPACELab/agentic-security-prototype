@@ -126,8 +126,12 @@ def run_agent(context, history):
             if selected_tool is None:
                 tool_result = f"Unknown tool: {name}"
             else:
-                # invoke the tool with the provided arguments and get the result
-                tool_result = selected_tool.invoke(args)
+                # Invoke the tool and return tool errors to the agent instead of crashing the request
+                try:
+                    tool_result = selected_tool.invoke(args)
+                except RuntimeError as exc:
+                    tool_result = str(exc)
+
 
             # --- DEBUGGING ---
             print(f"Tool result: {tool_result}")
