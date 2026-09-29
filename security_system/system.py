@@ -1,8 +1,12 @@
 """System module for enforcing application policies."""
 
+from collections.abc import Mapping
+from contextlib import AbstractContextManager
 from pathlib import Path
 
+from .context import Principal, SecurityContext, bind_security_context
 from .policy import FileSystemPolicy
+from .process import child_process_environment, initialize_inherited_process_context
 
 
 class System:
@@ -16,6 +20,40 @@ class System:
             raise TypeError("policy must implement FileSystemPolicy.")
 
         self.policy = policy
+
+        # Load a security context inherited from a parent process, if one exists
+        initialize_inherited_process_context()
+
+    def as_principal(
+    self,
+    subject: int | str,
+    session_id: str | None = None,
+    issuer: str | None = None,
+    ) -> AbstractContextManager[SecurityContext]:
+        """Bind one authenticated principal to the current execution."""
+
+        context = SecurityContext(
+            principal=Principal(
+                subject=str(subject),
+                issuer=issuer,
+            ),
+            session_id=session_id,
+        )
+
+        return bind_security_context(
+            context
+        )
+
+
+    def child_environment(
+        self,
+        base_environment: Mapping[str, str] | None = None,
+    ) -> dict[str, str]:
+        """Prepare one child process to inherit the current security context."""
+
+        return child_process_environment(
+            base_environment
+        )
 
     def _require_absolute_path(self, absolute_path) -> Path:
         """Require one concrete absolute filesystem resource."""
