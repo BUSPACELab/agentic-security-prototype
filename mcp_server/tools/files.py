@@ -10,15 +10,13 @@ from pathlib import Path
 from uuid import uuid4
 
 from config.security import system
-from security_system.context import current_security_context
-
 from ..config import MCP_ROOT
 
 
 def _default_user_path() -> str:
     """Return the current user's path."""
 
-    user_id = current_security_context().principal.subject
+    user_id = system.get_current_actor_id()
     return f"users/{user_id}"
 
 
@@ -64,12 +62,12 @@ def read_file_impl(path: str) -> str:
     return system.read_text(path)
 
 
-def delete_file_impl(path: str) -> bool:
+def delete_file_impl(path: str) -> str:
     """Delete a file."""
 
     source = build_mcp_path(path)
-
-    user_id = current_security_context().principal.subject
+    
+    user_id = system.get_current_actor_id()
 
     deleted_root = MCP_ROOT / "_deleted" / user_id
     deleted_root.mkdir(parents=True, exist_ok=True)
@@ -79,4 +77,6 @@ def delete_file_impl(path: str) -> bool:
     # Move the file to the "_deleted" folder
     system.move_file(source, destination)
 
-    return True
+    # If the file was moved successfully return the stored path so it can be deleted from the database as well
+    stored_path = source.relative_to(MCP_ROOT).as_posix()
+    return stored_path

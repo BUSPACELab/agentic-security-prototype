@@ -55,6 +55,11 @@ class System:
             base_environment
         )
 
+    def get_current_actor_id(self) -> str:
+        """Return the authenticated actor for the current execution."""
+
+        return current_security_context().principal.subject
+
     def _require_absolute_path(self, absolute_path) -> Path:
         """Require one concrete absolute filesystem resource."""
 
@@ -73,10 +78,10 @@ class System:
         path = self._require_absolute_path(absolute_path)
 
         # Get the trusted security context for the current execution
-        context = current_security_context()
+        actor_id = self.get_current_actor_id()
 
         # The application decides whether this context may read the resource
-        if self.policy.allows_read(context, path) is not True:
+        if self.policy.allows_read(actor_id, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
@@ -88,10 +93,10 @@ class System:
         path = self._require_absolute_path(absolute_path)
 
         # Get the trusted security context for the current execution
-        context = current_security_context()
+        actor_id = self.get_current_actor_id()
 
         # The application decides whether this context may modify the resource
-        if self.policy.allows_modify(context, path) is not True:
+        if self.policy.allows_modify(actor_id, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
@@ -120,11 +125,11 @@ class System:
             raise NotADirectoryError("Path is not a readable directory.")
 
         # Use the current context when filtering entries
-        context = current_security_context()
+        actor_id = self.get_current_actor_id()
 
         # Helper used to check whether an entry may be exposed
         def is_readable(entry: Path) -> bool:
-            return self.policy.allows_read(context, entry) is True
+            return self.policy.allows_read(actor_id, entry) is True
 
         readable_entries = []
 

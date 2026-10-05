@@ -44,7 +44,7 @@ def read_file(path: str) -> str:
 
 
 @mcp.tool()
-def delete_file(path: str) -> bool:
+def delete_file(path: str) -> str:
     """
     Delete a file using the custom MCP server.
     """

@@ -1,8 +1,6 @@
-from django.conf import settings
 from langchain_core.tools import tool
 
 from apps.files.models import UploadedFile
-from security_system.context import current_security_context
 
 from .client import call_custom_mcp_tool
 
@@ -29,21 +27,10 @@ def delete_file(path: str) -> str:
     """Delete a file through the custom MCP server."""
 
     # Call the delete_file tool from the custom MCP server
-    call_custom_mcp_tool("delete_file", {"path": path})
-
-    # Get the current user from the trusted security context
-    user_id = current_security_context().principal.subject
-
     # Delete the file from the database as well
-    stored_path = str(path).replace(
-        str(settings.MCP_FILESYSTEM_ROOT) + "/",
-        "",
-    ).lstrip("/")
+    stored_path = call_custom_mcp_tool("delete_file", {"path": path})
 
-    UploadedFile.objects.filter(
-        owner_id=user_id,
-        file=stored_path,
-    ).delete()
+    UploadedFile.objects.filter(file=stored_path,).delete()
 
     return f"Deleted {path}"
 
