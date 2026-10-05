@@ -1,0 +1,56 @@
+V1 -> V3 Developer Effort Evaluation
+====================================
+
+Purpose
+-------
+Measure how much code was needed to add the reusable security system to the insecure baseline, and determine how much of that work belongs to the reusable system versus the application.
+
+Compared versions
+-----------------
+V1: impl/baseline
+V3: impl/system-enforcement
+
+Method
+------
+We compared production Python files in:
+- apps/
+- config/
+- mcp_client/
+- mcp_server/
+- security_system/
+
+We excluded tests, migrations, documentation, notebooks, manual testing files, and generated results.
+
+Git additions are used as a rough measure of implementation effort.
+
+Results
+-------
+
+Overall V1 -> V3:
+Files changed: 15
+Lines added: 1054
+Lines deleted: 123
+Total line changes: 1177
+Net change: 931
+
+Reusable security system:
+Files changed: 6
+Lines added: 891
+Lines deleted: 0
+Net change: 891
+Share of all added lines: 84.5%
+
+Application / integration side:
+Files changed: 9
+Lines added: 163
+Lines deleted: 123
+Net change: 40
+Share of all added lines: 15.5%
+
+Conclusion
+----------
+V3 added 1054 lines in total.
+891 lines (84.5%) were added inside the reusable security_system package.
+163 lines (15.5%) were added on the application/integration side.
+
+Most of the implementation effort therefore moved into the reusable security system, while the application required a much smaller amount of integration code.

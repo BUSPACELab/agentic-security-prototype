@@ -1,0 +1,55 @@
+V2 -> V3 Developer Effort Summary
+=================================
+
+Purpose
+-------
+The goal is to see whether V3 reduces the amount of security work the application developer has to do compared with V2.
+
+V2
+--
+In V2, security was implemented manually across the application.
+
+The developer had to handle things such as:
+
+- Getting and passing the user identity.
+- Checking ownership and permissions.
+- Resolving and validating file paths.
+- Preventing traversal and symlink escapes.
+- Scoping list and search operations.
+- Building trusted tool arguments.
+- Authorizing tool calls before execution.
+
+This worked, but the developer needed to understand many security details and make sure every tool handled them correctly.
+
+V3
+--
+In V3, most of this work is moved into the reusable security_system.
+
+The System now handles:
+
+- Trusted identity and security context.
+- Passing identity to MCP child processes.
+- Authorization before filesystem operations.
+- Path containment and traversal protection.
+- Symlink protection.
+- Fail-closed behavior.
+- Protected read, list, write, remove, copy, and move operations.
+
+The application developer mainly needs to:
+
+- Define the application-specific policy.
+- Connect the application to the System.
+- Build the application resource/path.
+- Use the System operations.
+
+Main Difference
+---------------
+V2 requires the application developer to implement much of the security mechanism manually.
+
+V3 keeps the application-specific rules in the application, but moves the common security enforcement into reusable infrastructure.
+
+This makes the application code simpler and reduces the number of security details that each developer has to implement correctly.
+
+Conclusion
+----------
+The main benefit of V3 is not removing security code completely. It is moving most of the difficult security logic out of the application and into a reusable System that can be implemented and tested once and reused across applications.

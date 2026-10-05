@@ -1,0 +1,64 @@
+V2 -> V3 Developer Effort Evaluation
+====================================
+
+Purpose
+-------
+Measure how the implementation changed when moving from manual application-level security in V2 to the reusable security-system approach in V3.
+
+The main goal is to determine how much security code moved into the reusable system and how much application-side code was added, removed, or simplified.
+
+Compared versions
+-----------------
+V2: impl/application-policy-enforcement
+V3: impl/system-enforcement
+
+Method
+------
+We directly compare the production Python snapshots of V2 and V3.
+
+Included:
+- apps/
+- config/
+- mcp_client/
+- mcp_server/
+- security_system/
+
+Excluded:
+- tests/
+- migrations/
+- documentation
+- notebooks
+- manual testing files
+- generated results
+
+Git additions and deletions are used as a rough measure of implementation effort.
+
+Results
+-------
+
+Overall V2 -> V3:
+Files changed: 27
+Lines added: 1092
+Lines deleted: 1589
+Total line changes: 2681
+Net change: -497
+
+Reusable security system:
+Files changed: 6
+Lines added: 891
+Lines deleted: 0
+Net change: 891
+Share of all added lines: 81.6%
+
+Application / integration side:
+Files changed: 21
+Lines added: 201
+Lines deleted: 1589
+Net change: -1388
+Share of all added lines: 18.4%
+
+Conclusion
+----------
+Moving from V2 to V3 added 1092 lines and removed 1589 lines in the measured production code.
+891 newly added lines belong to the reusable security_system package.
+On the application/integration side, 201 lines were added and 1589 lines were removed, for a net change of -1388 lines.
