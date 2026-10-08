@@ -1,0 +1,129 @@
+python -u manage.py test evaluation.concurrency.test_two_users -v 2 2>&1
+Found 2 test(s).
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, conversations, files, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying conversations.0001_initial... OK
+  Applying files.0001_initial... OK
+  Applying sessions.0001_initial... OK
+System check identified no issues (0 silenced).
+test_cross_user_files (evaluation.concurrency.test_two_users.TwoUsersTest.test_cross_user_files) ... 
+============================================================
+TEST: CROSS-USER FILES
+============================================================
+APP principal: 1
+APP principal: 2
+SYSTEM principal: 1
+SYSTEM principal: 2
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+
+========== USER 1 ==========
+Requested file: users/2/parallel_8cd42582a3a947b59c0dd92ef17ec4cd.txt
+Expected: DENIED
+Actual: DENIED
+Content: Error executing tool read_file: Access denied.
+Identity before: 1
+Identity after: 1
+Process ID: 13142
+Thread ID: 6118879232
+MCP start: 2026-10-08T17:24:51.450+00:00
+MCP end: 2026-10-08T17:24:52.380+00:00
+MCP duration (ms): 929.65
+Request duration (ms): 936.91
+
+========== USER 2 ==========
+Requested file: users/1/parallel_54b2020e386d422f8aed64dac86fb876.txt
+Expected: DENIED
+Actual: DENIED
+Content: Error executing tool read_file: Access denied.
+Identity before: 2
+Identity after: 2
+Process ID: 13142
+Thread ID: 6135705600
+MCP start: 2026-10-08T17:24:51.450+00:00
+MCP end: 2026-10-08T17:24:52.383+00:00
+MCP duration (ms): 932.51
+Request duration (ms): 934.0
+
+========== CONCURRENCY ==========
+Same process: True
+Different threads: True
+MCP overlap (ms): 929.65
+Concurrent MCP calls: True
+ok
+test_own_files (evaluation.concurrency.test_two_users.TwoUsersTest.test_own_files) ... 
+============================================================
+TEST: TWO USERS READING THEIR OWN FILES
+============================================================
+APP principal: 3
+APP principal: 4
+SYSTEM principal: 3
+SYSTEM principal: 4
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type ListToolsRequest
+Processing request of type ListToolsRequest
+
+========== USER 3 ==========
+Requested file: users/3/parallel_b4a87ca865c14fca8940f5238a5806cf.txt
+Expected: ALLOWED
+Actual: ALLOWED
+Content: Hello from User 3
+Identity before: 3
+Identity after: 3
+Process ID: 13142
+Thread ID: 6118879232
+MCP start: 2026-10-08T17:24:52.396+00:00
+MCP end: 2026-10-08T17:24:53.337+00:00
+MCP duration (ms): 941.45
+Request duration (ms): 944.33
+
+========== USER 4 ==========
+Requested file: users/4/parallel_35fd04812e484e7bbb498f2ef61f103c.txt
+Expected: ALLOWED
+Actual: ALLOWED
+Content: Hello from User 4
+Identity before: 4
+Identity after: 4
+Process ID: 13142
+Thread ID: 6135705600
+MCP start: 2026-10-08T17:24:52.396+00:00
+MCP end: 2026-10-08T17:24:53.335+00:00
+MCP duration (ms): 939.36
+Request duration (ms): 943.41
+
+========== CONCURRENCY ==========
+Same process: True
+Different threads: True
+MCP overlap (ms): 939.33
+Concurrent MCP calls: True
+ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.903s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

@@ -22,3 +22,6 @@ tmp/
 
 # Tests
 tests/notebooks/.ipynb_checkpoints/
+
+# Comparison files
+comparison_evaluation/meeting_notes.txt

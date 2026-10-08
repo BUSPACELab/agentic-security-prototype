@@ -1,0 +1,95 @@
+test_cross_user_files (__main__.MultipleProcessesTest.test_cross_user_files) ... 
+============================================================
+TEST: TWO PROCESSES READING OTHER USERS' FILES
+============================================================
+SYSTEM principal: 2
+SYSTEM principal: 1
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+APP principal: 1
+APP principal: 2
+
+========== USER 1 ==========
+Requested file: users/2/parallel_ee99df706f5c46d88ba2d92684a1a425.txt
+Expected: DENIED
+Actual: DENIED
+Content: Error executing tool read_file: Access denied.
+Identity before: 1
+Identity after: 1
+Process ID: 20721
+Thread ID: 8387338624
+MCP start: 2026-10-08T17:57:27.558+00:00
+MCP end: 2026-10-08T17:57:28.490+00:00
+MCP duration (ms): 932.36
+Request duration (ms): 2662.89
+
+========== USER 2 ==========
+Requested file: users/1/parallel_4a94d347069a4850a47d65682c1cc8ac.txt
+Expected: DENIED
+Actual: DENIED
+Content: Error executing tool read_file: Access denied.
+Identity before: 2
+Identity after: 2
+Process ID: 20728
+Thread ID: 8387338624
+MCP start: 2026-10-08T17:57:27.558+00:00
+MCP end: 2026-10-08T17:57:28.487+00:00
+MCP duration (ms): 929.29
+Request duration (ms): 1315.16
+
+========== CONCURRENCY ==========
+Different processes: True
+MCP overlap (ms): 929.25
+Concurrent MCP calls: True
+ok
+test_own_files (__main__.MultipleProcessesTest.test_own_files) ... 
+============================================================
+TEST: TWO PROCESSES READING THEIR OWN FILES
+============================================================
+SYSTEM principal: 1
+SYSTEM principal: 2
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type ListToolsRequest
+Processing request of type ListToolsRequest
+APP principal: 1
+APP principal: 2
+
+========== USER 1 ==========
+Requested file: users/1/parallel_9a0ee6d683284230a1d368b92a89a79b.txt
+Expected: ALLOWED
+Actual: ALLOWED
+Content: Hello from User 1
+Identity before: 1
+Identity after: 1
+Process ID: 20749
+Thread ID: 8387338624
+MCP start: 2026-10-08T17:57:31.442+00:00
+MCP end: 2026-10-08T17:57:32.348+00:00
+MCP duration (ms): 905.82
+Request duration (ms): 2492.92
+
+========== USER 2 ==========
+Requested file: users/2/parallel_35a8402904be428f8a391b90b92dcff4.txt
+Expected: ALLOWED
+Actual: ALLOWED
+Content: Hello from User 2
+Identity before: 2
+Identity after: 2
+Process ID: 20756
+Thread ID: 8387338624
+MCP start: 2026-10-08T17:57:31.442+00:00
+MCP end: 2026-10-08T17:57:32.348+00:00
+MCP duration (ms): 906.36
+Request duration (ms): 1298.58
+
+========== CONCURRENCY ==========
+Different processes: True
+MCP overlap (ms): 905.82
+Concurrent MCP calls: True
+ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 7.849s
+
+OK
