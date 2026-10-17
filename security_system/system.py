@@ -1,13 +1,12 @@
 """System module for enforcing application policies."""
 
 from collections.abc import Mapping
-from contextlib import AbstractContextManager
 from pathlib import Path
+import os
 
-from .context import Principal, SecurityContext, bind_security_context, current_security_context
+from .identity import IDENTITY_META_KEY, PUBLIC_KEY_ENV, issue_identity, public_key_pem
+from .context import current_security_context
 from .policy import FileSystemPolicy
-from .process import child_process_environment, initialize_inherited_process_context
-
 
 class System:
     """Enforce application policies before protected operations."""
@@ -21,39 +20,25 @@ class System:
 
         self.policy = policy
 
-        # Load a security context inherited from a parent process, if one exists
-        initialize_inherited_process_context()
+    def child_environment(self, base_environment: Mapping[str, str] | None = None) -> dict[str, str]:
+        """Prepare the environment for a trusted local MCP child."""
 
-    def as_principal(
-    self,
-    subject: int | str,
-    session_id: str | None = None,
-    issuer: str | None = None,
-    ) -> AbstractContextManager[SecurityContext]:
-        """Bind one authenticated principal to the current execution."""
+        # Preserve the environment supplied by the application
+        environment = dict(os.environ if base_environment is None else base_environment)
 
-        context = SecurityContext(
-            principal=Principal(
-                subject=str(subject),
-                issuer=issuer,
-            ),
-            session_id=session_id,
-        )
+        # The child can verify signed identities without receiving the private key
+        environment[PUBLIC_KEY_ENV] = public_key_pem()
 
-        return bind_security_context(
-            context
-        )
+        return environment
 
+    def mcp_request_metadata(self) -> dict[str, str]:
+        """Create signed identity metadata for the current MCP request."""
 
-    def child_environment(
-        self,
-        base_environment: Mapping[str, str] | None = None,
-    ) -> dict[str, str]:
-        """Prepare one child process to inherit the current security context."""
+        # Get the identity already authenticated by the application
+        context = current_security_context()
 
-        return child_process_environment(
-            base_environment
-        )
+        # Sign the identity instead of trusting an arbitrary user ID
+        return {IDENTITY_META_KEY: issue_identity(context)}
 
     def get_current_actor_id(self) -> str:
         """Return the authenticated actor for the current execution."""
@@ -69,7 +54,7 @@ class System:
         if not path.is_absolute():
             raise ValueError("System requires an absolute path.")
 
-        return path
+        return path.resolve()
 
     def _authorize_read(self, absolute_path) -> Path:
         """Authorize the application's read policy."""
@@ -129,7 +114,7 @@ class System:
 
         # Helper used to check whether an entry may be exposed
         def is_readable(entry: Path) -> bool:
-            return self.policy.allows_read(actor_id, entry) is True
+            return self.policy.allows_read(actor_id, entry.resolve()) is True
 
         readable_entries = []
 

@@ -44,7 +44,8 @@ async def _call_custom_tool(tool_name: str, arguments: dict):
     async with stdio_client(_custom_server_params()) as (read_stream, write_stream):
         async with ClientSession(read_stream, write_stream) as session:
             await session.initialize()
-            return await session.call_tool(tool_name, arguments)
+            # Attach the authenticated user's identity to this specific tool call
+            return await session.call_tool(tool_name, arguments, meta=system.mcp_request_metadata())
 
 # _list_custom_tools is a helper function that lists the tools exposed by the custom MCP server 
 async def _list_custom_tools():

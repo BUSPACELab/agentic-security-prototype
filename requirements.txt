@@ -19,3 +19,6 @@ ipykernel>=7.0
 jupyter>=1.1
 matplotlib>=3.10
 nbformat>=5.10
+
+PyJWT[crypto]>=2.10,<3
+filelock>=3.12,<4
