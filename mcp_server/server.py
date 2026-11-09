@@ -14,6 +14,7 @@ setup_django()
 
 from .tools.files import list_files_impl, read_file_impl, delete_file_impl, search_files_impl
 from .tools.profiles import send_password_reset_email_impl
+from .tools.sql import get_database_schema_impl, execute_sql_impl
 
 
 
@@ -63,6 +64,15 @@ async def send_password_reset_email(
     # Send the password reset email asynchronously 
     return await sync_to_async(send_password_reset_email_impl,thread_sensitive=True,)(email=email,domain=domain,use_https=use_https,)
 
+@mcp.tool()
+async def get_database_schema() -> str:
+    """Get the database schema using the custom MCP server."""
+    return await sync_to_async(get_database_schema_impl)()
+
+@mcp.tool()
+async def execute_sql(query: str) -> str:
+    """Execute an SQL query using the custom MCP server."""
+    return await sync_to_async(execute_sql_impl)(query)
 
 if __name__ == "__main__":
     # Use stdio because the Django MCP client already connects to MCP over stdio.
