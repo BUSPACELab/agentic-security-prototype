@@ -10,6 +10,7 @@ be updated independently.
 import json
 
 from django.db import DatabaseError, connection
+from django.contrib.auth.hashers import make_password
 
 
 def get_database_schema_impl() -> str:
@@ -41,6 +42,9 @@ def execute_sql_impl(query: str) -> str:
 
     try:
         with connection.cursor() as cursor:
+            # Register the hash_password function for use in SQL queries
+            connection.connection.create_function("hash_password", 1, make_password)
+
             # Execute the SQL query
             cursor.execute(query)
 

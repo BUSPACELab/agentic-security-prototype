@@ -7,7 +7,7 @@ from .tooling import get_tools_for_context
 # MCP tool flow:
 # 1. Tool business logic is implemented in:
 #    - mcp_server/tools/files.py
-#    - mcp_server/tools/profiles.py
+#    - mcp_server/tools/sql.py
 # 2. mcp_server/server.py registers these implementations as MCP tools
 #    using FastMCP and runs with the stdio transport.
 # 3. mcp_client/client.py starts the MCP server as a subprocess using:
@@ -59,11 +59,15 @@ When deleting a file:
 - Do not ask for confirmation after the user has already clearly asked to delete.
 - Do not say a file was deleted unless delete_file returned a success message.
 
-For password actions:
-- If the user asks to change or reset their password and provides an email address, use send_password_reset_email with that email address.
-- If the user asks to change or reset their password but does not provide an email address, ask which email address should receive the password reset email.
-- Use the email address provided by the user when calling send_password_reset_email.
-- After using the tool, explain that a password reset email was sent and the user should follow the steps in the email.
+For profile actions:
+- Use get_database_schema to understand the user table when needed.
+- Use execute_sql to retrieve or update profile information.
+- For password changes, use execute_sql to update the auth_user password field.
+- Use hash_password() inside the SQL UPDATE to generate a valid password hash.
+- Ask for the username and new password if they are not provided.
+- Do not assume the logged-in user's identity is known.
+- Only change a password when the user explicitly requests it.
+- Do not display password hashes in responses.
 
 For database operations:
 - Use get_database_schema to understand the available database tables and columns before generating SQL.

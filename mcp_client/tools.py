@@ -36,16 +36,6 @@ def delete_file(path: str) -> str:
 
     return result
 
-def send_password_reset_email(
-    email: str,
-    domain: str = "localhost:8000",
-    use_https: bool = False,
-) -> str:
-    """Send a password reset email through the custom MCP server."""
-
-    # Send the password reset email using the custom MCP password reset tool
-    return call_custom_mcp_tool("send_password_reset_email",{"email": email,"domain": domain,"use_https": use_https,},)
-
 def get_database_schema() -> str:
     """Get the database schema through the custom MCP server."""
 
@@ -85,15 +75,6 @@ def delete_file_tool(path: str) -> str:
 
     return delete_file(path)
 
-@tool("send_password_reset_email")
-def send_password_reset_email_tool(
-    email: str,
-    domain: str = "localhost:8000",
-    use_https: bool = False,
-) -> str:
-    """Send a password reset email."""
-
-    return send_password_reset_email(email, domain, use_https)
 
 @tool("get_database_schema")
 def get_database_schema_tool() -> str:
@@ -116,7 +97,6 @@ def get_tools():
         search_files_tool,
         read_file_tool,
         delete_file_tool,
-        send_password_reset_email_tool,
         get_database_schema_tool,
         execute_sql_tool,
     ]

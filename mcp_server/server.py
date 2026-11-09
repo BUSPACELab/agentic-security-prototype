@@ -13,7 +13,6 @@ from .django_setup import setup_django
 setup_django()
 
 from .tools.files import list_files_impl, read_file_impl, delete_file_impl, search_files_impl
-from .tools.profiles import send_password_reset_email_impl
 from .tools.sql import get_database_schema_impl, execute_sql_impl
 
 
@@ -51,18 +50,6 @@ def delete_file(path: str) -> str:
     Delete a file using the custom MCP server.
     """
     return delete_file_impl(path)
-
-@mcp.tool()
-async def send_password_reset_email(
-    email: str,
-    domain: str = "localhost:8000",
-    use_https: bool = False,
-) -> str:
-    """
-    Send a password reset email using the custom MCP server.
-    """
-    # Send the password reset email asynchronously 
-    return await sync_to_async(send_password_reset_email_impl,thread_sensitive=True,)(email=email,domain=domain,use_https=use_https,)
 
 @mcp.tool()
 async def get_database_schema() -> str:
