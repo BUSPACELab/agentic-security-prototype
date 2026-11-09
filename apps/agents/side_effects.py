@@ -46,9 +46,6 @@ def request_confirmation_if_needed(user: Any, context: str, session: Any, tool_n
         filename = str(safe_args.get("path", "")).rsplit("/", 1)[-1] or "the selected file"
         return f'Deleting "{filename}" requires confirmation. Reply CONFIRM to continue or CANCEL to stop.'
 
-    if tool_name == actions.TOOL_SEND_PASSWORD_RESET_EMAIL:
-        return "Sending a password-reset email requires confirmation. Reply CONFIRM to continue or CANCEL to stop."
-
     return "This action requires confirmation. Reply CONFIRM to continue or CANCEL to stop."
 
 

@@ -38,15 +38,12 @@ FILE_SEARCH = "file:search"
 FILE_READ = "file:read"
 FILE_DELETE = "file:delete"
 
-ACCOUNT_PASSWORD_RESET = "account:password-reset"
-
 
 # LangChain / MCP tool names used to map to business actions
 TOOL_LIST_FILES = "list_files"
 TOOL_SEARCH_FILES = "search_files"
 TOOL_READ_FILE = "read_file"
 TOOL_DELETE_FILE = "delete_file"
-TOOL_SEND_PASSWORD_RESET_EMAIL = "send_password_reset_email"
 
 
 # Define each tool's business action and allowed context in one place
@@ -62,7 +59,6 @@ TOOL_DEFINITIONS = MappingProxyType(
         TOOL_SEARCH_FILES: ToolDefinition(action=FILE_SEARCH, context=FILE_CONTEXT),
         TOOL_READ_FILE: ToolDefinition(action=FILE_READ, context=FILE_CONTEXT),
         TOOL_DELETE_FILE: ToolDefinition(action=FILE_DELETE, context=FILE_CONTEXT),
-        TOOL_SEND_PASSWORD_RESET_EMAIL: ToolDefinition(action=ACCOUNT_PASSWORD_RESET, context=PROFILE_CONTEXT),
     }
 )
 
@@ -70,13 +66,12 @@ TOOL_DEFINITIONS = MappingProxyType(
 SIDE_EFFECT_ACTIONS = frozenset(
     {
         FILE_DELETE,
-        ACCOUNT_PASSWORD_RESET,
     }
 )
 
 ALL_CONTEXTS = frozenset({FILE_CONTEXT, PROFILE_CONTEXT})
 ALL_RESOURCE_TYPES = frozenset({RESOURCE_TOOL, RESOURCE_FILE_COLLECTION, RESOURCE_FILE, RESOURCE_ACCOUNT})
-ALL_ACTIONS = frozenset({TOOL_EXPOSE, FILE_LIST, FILE_SEARCH, FILE_READ, FILE_DELETE, ACCOUNT_PASSWORD_RESET})
+ALL_ACTIONS = frozenset({TOOL_EXPOSE, FILE_LIST, FILE_SEARCH, FILE_READ, FILE_DELETE})
 
 
 def action_for_tool(tool_name: str) -> str | None:

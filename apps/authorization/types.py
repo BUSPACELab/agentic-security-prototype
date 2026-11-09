@@ -68,7 +68,7 @@ class RequestContext:
 
     Examples:
     - name: file or profile
-    - tool: read_file, delete_file, send_password_reset_email
+    - tool: read_file, delete_file
     """
 
     name: str

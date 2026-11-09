@@ -71,28 +71,41 @@ def delete_file(path: str, user_id: int | str | None = None) -> str:
 
     return result
 
-def send_password_reset_email(email: str, domain: str = "localhost:8000", use_https: bool = False) -> str:
-    """Send a password reset email through the custom MCP server."""
+def get_database_schema() -> str:
+    """Get the database schema through the custom MCP server."""
 
-    # Send the password reset email using the custom MCP password reset tool
-    return call_custom_mcp_tool("send_password_reset_email",{"email": email,"domain": domain,"use_https": use_https,},)
+    return call_custom_mcp_tool("get_database_schema", {})
+
+
+def execute_sql(query: str) -> str:
+    """Execute an SQL query through the custom MCP server."""
+
+    return call_custom_mcp_tool("execute_sql", {"query": query})
 
 
 # These just to expose the above functions as tools to be used by the agent
 
-@tool("send_password_reset_email")
-def send_password_reset_email_tool(email: str, domain: str = "localhost:8000", use_https: bool = False) -> str:
-    """Send a password reset email."""
+@tool("get_database_schema")
+def get_database_schema_tool() -> str:
+    """Get the database tables, columns, and relationships."""
 
-    return send_password_reset_email(email, domain=domain, use_https=use_https)
+    return get_database_schema()
+
+
+@tool("execute_sql")
+def execute_sql_tool(query: str) -> str:
+    """Execute an SQL query to read or modify database records."""
+
+    return execute_sql(query)
 
 def get_tools(user_id: int | str | None = None):
     """Return the tools used by the agent."""
 
-    # If no user id is provided, return the send_password_reset_email tool only bc it is not user specific we can use it for all users without sign-in or id info
+    # File tools require a user id so the MCP filesystem can be scoped to that user.
     if user_id is None:
         return [
-            send_password_reset_email_tool,
+            get_database_schema_tool,
+            execute_sql_tool,
         ]
 
     @tool("list_files")
@@ -124,5 +137,6 @@ def get_tools(user_id: int | str | None = None):
         search_files_tool,
         read_file_tool,
         delete_file_tool,
-        send_password_reset_email_tool,
+        get_database_schema_tool,
+        execute_sql_tool,
     ]

@@ -7,7 +7,7 @@ from django.conf import settings
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# The MCP filesystem server will operate on the same root directory as Django's file storage
+# The MCP server will operate on the same root directory as Django's file storage
 # It is media/ from the settings
 MCP_ROOT = Path(settings.MCP_FILESYSTEM_ROOT).resolve()
 
@@ -41,7 +41,7 @@ def build_custom_server_params(filesystem_root: str | None = None) -> StdioServe
     )
 
 
-# The tools below are wrappers around the tools exposed by the custom MCP filesystem server
+# The tools below are wrappers around the tools exposed by the custom MCP server
 # _call_custom_tool is a helper function that connects to the MCP server and calls a tool with the given arguments, returning the raw result from the MCP server
 async def _call_custom_tool(tool_name: str, arguments: dict, filesystem_root: str | None = None): 
     """Call one tool on the custom Python MCP server."""

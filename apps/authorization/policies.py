@@ -16,7 +16,6 @@ from dataclasses import dataclass
 from typing import FrozenSet
 
 from .actions import (
-    ACCOUNT_PASSWORD_RESET,
     ALL_ACTIONS,
     ALL_CONTEXTS,
     ALL_RESOURCE_TYPES,
@@ -35,37 +34,6 @@ from .actions import (
     tool_is_allowed_in_context,
 )
 from .types import AuthorizationRequest, Effect
-
-
-# Example: user asks the LLM to reset their password
-#
-# 1. Tool exposure:
-#    The application checks which tools are allowed in the current chat context.
-#    In the profile context, send_password_reset_email is shown to the LLM,
-#    while file tools are hidden.
-#
-# 2. Tool selection:
-#    The LLM may choose send_password_reset_email from the available tools.
-#    However, exposing the tool does not mean it is automatically authorized
-#    for execution.
-#
-# 3. Trusted request construction:
-#    Before executing the tool, the application creates an AuthorizationRequest.
-#    The principal ID, account ID, account owner ID, and email come from Django
-#    request.user, not from the user's prompt or the LLM.
-#
-# 4. Runtime authorization:
-#    The policy engine evaluates the AuthorizationRequest using the
-#    owner-may-request-own-password-reset policy. It permits the action only
-#    when the authenticated user owns the target account.
-#
-# 5. Enforcement:
-#    If allowed, the application invokes send_password_reset_email using
-#    request.user.email. The LLM cannot choose another account or email.
-#
-#    If denied, the tool is not invoked. The user receives a simple message
-#    saying the action is not allowed, and the detailed decision is recorded
-#    in the authorization audit log.
 
 
 # This helps letting us use the short name Condition for any function that receives an AuthorizationRequest and returns True or False
@@ -219,17 +187,6 @@ POLICIES: tuple[Policy, ...] = (
         condition=owns_resource,
     ),
 
-    # Profile/account policies.
-
-    # 7. Owner may request own password reset
-    Policy(
-        id="owner-may-request-own-password-reset",
-        effect=Effect.PERMIT,
-        actions=frozenset({ACCOUNT_PASSWORD_RESET}),
-        resource_type=RESOURCE_ACCOUNT,
-        contexts=frozenset({PROFILE_CONTEXT}),
-        condition=owns_account,
-    ),
 )
 
 

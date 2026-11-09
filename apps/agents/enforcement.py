@@ -11,9 +11,7 @@ authorization engine.
 from dataclasses import dataclass
 from typing import Any
 
-from django.contrib.auth import get_user_model
-
-from apps.authorization.actions import RESOURCE_ACCOUNT, RESOURCE_FILE, RESOURCE_FILE_COLLECTION, TOOL_DELETE_FILE, TOOL_LIST_FILES, TOOL_READ_FILE, TOOL_SEARCH_FILES, TOOL_SEND_PASSWORD_RESET_EMAIL, action_for_tool
+from apps.authorization.actions import RESOURCE_FILE, RESOURCE_FILE_COLLECTION, TOOL_DELETE_FILE, TOOL_LIST_FILES, TOOL_READ_FILE, TOOL_SEARCH_FILES, action_for_tool
 from apps.authorization.audit import audit_decision
 from apps.authorization.engine import authorize
 from apps.authorization.types import AuthorizationRequest, Decision, Principal, RequestContext, Resource
@@ -103,58 +101,6 @@ def file_resource(principal: Principal, args: dict[str, Any]) -> Resource:
     )
 
 
-def account_resource(principal: Principal, args: dict[str, Any]) -> Resource:
-    """
-    Build the target account resource from the provided email.
-
-    The provided email is only used to resolve a trusted User record. If the
-    email belongs to another user, the resource owner will be that other user,
-    and owns_account will deny.
-    """
-
-    # Extract the requested email from the tool call arguments then normalize it to lowercase and strip whitespace
-    requested_email = str(args.get("email", "")).strip().lower()
-
-    # Case 1: user asked without giving an email
-    # Use the signed-in user's trusted account email
-    if not requested_email:
-        # If the principal has no id or email, return an unknown resource
-        if principal.id is None or not principal.email:
-            return Resource(type=RESOURCE_ACCOUNT)
-
-        # if the principal has an id but no email, add the principal's email to the resource attributes
-        return Resource(
-            type=RESOURCE_ACCOUNT,
-            id=str(principal.id),
-            owner_id=str(principal.id),
-            attributes={
-                "email": principal.email,
-            },
-        )
-
-    # Case 2: user asked for a specific email
-    # Find the database record using the provided email
-    User = get_user_model()
-    target_user = User.objects.filter(email__iexact=requested_email).first()
-
-    # If no database record was found return an unknown resource
-    if target_user is None:
-        return Resource(type=RESOURCE_ACCOUNT)
-
-    return Resource(
-        # The resource type is always "account"
-        type=RESOURCE_ACCOUNT,
-        # The resource id is the database user id bc the account resource represents a specific user account
-        id=str(target_user.id),
-        # The resource owner id is the database user id 
-        owner_id=str(target_user.id),
-        # The resource attributes include the email (additional attributes)
-        attributes={
-            "email": target_user.email,
-        },
-    )
-
-
 def resource_for_tool_call(principal: Principal, tool_name: str, args: dict[str, Any]) -> Resource:
     """Build the protected resource for a tool invocation."""
 
@@ -168,20 +114,12 @@ def resource_for_tool_call(principal: Principal, tool_name: str, args: dict[str,
     if tool_name in {TOOL_READ_FILE, TOOL_DELETE_FILE}:
         return file_resource(principal, args)
 
-    # if the tool is one that operates on a user account, return an account resource
-    if tool_name == TOOL_SEND_PASSWORD_RESET_EMAIL:
-        return account_resource(principal, args)
-
     # if the tool is unknown, return an unknown resource
     return Resource(type="unknown")
 
 # This function is used to build trusted arguments for a tool call to prevent the agent from passing untrusted arguments to the tool. It takes the tool name, the original arguments, and the resource being accessed, and returns a dictionary of safe arguments to use for the tool call
 def safe_args_for_tool_call(tool_name: str, args: dict[str, Any], resource: Resource) -> dict[str, Any]:
     """Build trusted tool arguments after authorization."""
-
-    # if the tool is one that operates on a user account, return the email attribute from the resource as the safe argument
-    if tool_name == TOOL_SEND_PASSWORD_RESET_EMAIL:
-        return {"email": resource.attributes.get("email")}
 
     # if the tool is one that operates on a specific file, return the stored_path attribute from the resource as the safe argument
     if tool_name in {TOOL_READ_FILE, TOOL_DELETE_FILE}:
