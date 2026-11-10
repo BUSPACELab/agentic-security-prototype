@@ -15,24 +15,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import FrozenSet
 
-from .actions import (
-    ALL_ACTIONS,
-    ALL_CONTEXTS,
-    ALL_RESOURCE_TYPES,
-    FILE_DELETE,
-    FILE_LIST,
-    FILE_READ,
-    FILE_SEARCH,
-    FILE_CONTEXT,
-    PROFILE_CONTEXT,
-    RESOURCE_ACCOUNT,
-    RESOURCE_FILE,
-    RESOURCE_FILE_COLLECTION,
-    RESOURCE_TOOL,
-    TOOL_EXPOSE,
-    action_for_tool,
-    tool_is_allowed_in_context,
-)
+from .actions import *
 from .types import AuthorizationRequest, Effect
 
 
@@ -81,7 +64,7 @@ def request_is_consistent(request: AuthorizationRequest) -> bool:
     if request.action == TOOL_EXPOSE:
         return request.context.tool is not None and request.resource.id == request.context.tool
 
-    return request.context.tool is not None and action_for_tool(request.context.tool) == request.action
+    return request.context.tool is not None and action_for_tool(request.context.tool, request.action) == request.action
 
 
 def is_authenticated(request: AuthorizationRequest) -> bool:
@@ -185,6 +168,49 @@ POLICIES: tuple[Policy, ...] = (
         resource_type=RESOURCE_FILE,
         contexts=frozenset({FILE_CONTEXT}),
         condition=owns_resource,
+    ),
+
+
+    # SQL policies
+
+    # 7. Authenticated users may inspect the database schema
+    Policy(
+        id="authenticated-user-may-read-schema",
+        effect=Effect.PERMIT,
+        actions=frozenset({DATABASE_SCHEMA_READ}),
+        resource_type=RESOURCE_DATABASE_SCHEMA,
+        contexts=frozenset({FILE_CONTEXT, PROFILE_CONTEXT}),
+        condition=is_authenticated,
+    ),
+
+    # 8. Users may read their own file metadata
+    Policy(
+        id="owner-may-read-file-metadata",
+        effect=Effect.PERMIT,
+        actions=frozenset({FILE_METADATA_READ}),
+        resource_type=RESOURCE_FILE_COLLECTION,
+        contexts=frozenset({FILE_CONTEXT}),
+        condition=owns_resource,
+    ),
+
+    # 9. Users may read their own account information
+    Policy(
+        id="owner-may-read-account",
+        effect=Effect.PERMIT,
+        actions=frozenset({ACCOUNT_READ}),
+        resource_type=RESOURCE_ACCOUNT,
+        contexts=frozenset({PROFILE_CONTEXT}),
+        condition=owns_account,
+    ),
+
+    # 10. Users may update their own account information
+    Policy(
+        id="owner-may-update-account",
+        effect=Effect.PERMIT,
+        actions=frozenset({ACCOUNT_UPDATE}),
+        resource_type=RESOURCE_ACCOUNT,
+        contexts=frozenset({PROFILE_CONTEXT}),
+        condition=owns_account,
     ),
 
 )

@@ -11,10 +11,11 @@ authorization engine.
 from dataclasses import dataclass
 from typing import Any
 
-from apps.authorization.actions import RESOURCE_FILE, RESOURCE_FILE_COLLECTION, TOOL_DELETE_FILE, TOOL_LIST_FILES, TOOL_READ_FILE, TOOL_SEARCH_FILES, action_for_tool
+from apps.authorization.actions import *
 from apps.authorization.audit import audit_decision
 from apps.authorization.engine import authorize
 from apps.authorization.types import AuthorizationRequest, Decision, Principal, RequestContext, Resource
+from apps.authorization.sql_validation import inspect_sql, SQLValidationError, READ_COLUMNS
 from apps.files.models import UploadedFile
 from apps.agents.tooling import principal_from_user
 
@@ -101,7 +102,32 @@ def file_resource(principal: Principal, args: dict[str, Any]) -> Resource:
     )
 
 
-def resource_for_tool_call(principal: Principal, tool_name: str, args: dict[str, Any]) -> Resource:
+def account_resource(principal: Principal) -> Resource:
+    """Build the current user's account resource."""
+
+    if principal.id is None:
+        return Resource(type=RESOURCE_ACCOUNT)
+
+    return Resource(
+        type=RESOURCE_ACCOUNT,
+        id=principal.id,
+        owner_id=principal.id,
+    )
+
+
+def sql_resource(principal: Principal, action: str | None) -> Resource:
+    """Determine the protected resource for a SQL operation."""
+
+    if action == FILE_METADATA_READ:
+        return file_collection_resource(principal)
+
+    if action in {ACCOUNT_READ, ACCOUNT_UPDATE}:
+        return account_resource(principal)
+
+    return Resource(type="unknown")
+
+
+def resource_for_tool_call(principal: Principal, tool_name: str, args: dict[str, Any], action: str | None = None) -> Resource:
     """Build the protected resource for a tool invocation."""
 
     # Three types of resources are supported: file collection, file, and account. The resource type is determined by the tool being called
@@ -114,8 +140,32 @@ def resource_for_tool_call(principal: Principal, tool_name: str, args: dict[str,
     if tool_name in {TOOL_READ_FILE, TOOL_DELETE_FILE}:
         return file_resource(principal, args)
 
+    # if the tool is to get the database schema, return a database schema resource
+    if tool_name == TOOL_GET_DATABASE_SCHEMA:
+        return Resource(type=RESOURCE_DATABASE_SCHEMA, id="database-schema")
+
+    # if the tool is to execute SQL, return a SQL resource and the resource type is determined by the action being performed since sql execution can operate on multiple resource types (file collection, account, etc.)
+    if tool_name == TOOL_EXECUTE_SQL:
+        return sql_resource(principal, action)
+
     # if the tool is unknown, return an unknown resource
     return Resource(type="unknown")
+
+def filter_tool_result(context, name, result):
+    if name != TOOL_GET_DATABASE_SCHEMA:
+        return result
+
+    table = {"file": "files_uploadedfile", "profile": "auth_user"}.get(context)
+    if not table or not isinstance(result, str):
+        return "Schema unavailable."
+
+    schema = next((s for s in result.splitlines() if s.startswith(f'CREATE TABLE "{table}" (')), "")
+    columns = READ_COLUMNS[table]
+
+    if not schema or any(f'"{col}" ' not in schema for col in columns):
+        return "Schema unavailable."
+
+    return f"Table: {table}\nColumns: {', '.join(sorted(columns))}"
 
 # This function is used to build trusted arguments for a tool call to prevent the agent from passing untrusted arguments to the tool. It takes the tool name, the original arguments, and the resource being accessed, and returns a dictionary of safe arguments to use for the tool call
 def safe_args_for_tool_call(tool_name: str, args: dict[str, Any], resource: Resource) -> dict[str, Any]:
@@ -138,8 +188,23 @@ def safe_args_for_tool_call(tool_name: str, args: dict[str, Any], resource: Reso
 def authorize_tool_invocation(user: Any, context: str, tool_name: str, args: dict[str, Any]) -> ToolCallAuthorization:
     """Authorize a selected tool invocation before execution."""
 
-    # Get the business action for the tool
-    action = action_for_tool(tool_name)
+    
+    # Convert the Django user to a principal
+    principal = principal_from_user(user)
+
+    # Resolve the business action and prepare safe arguments
+    if tool_name == TOOL_EXECUTE_SQL:
+        try:
+            operation = inspect_sql(args.get("query"), context, principal.id)
+        except SQLValidationError:
+            return ToolCallAuthorization(allowed=False,safe_args={},message="The SQL query is not allowed.")
+
+        action = action_for_tool(tool_name, operation.action)
+        args = {"query": operation.safe_query}
+
+    else:
+        action = action_for_tool(tool_name)
+
 
     # If the business action is unknown, deny the tool call
     if action is None:
@@ -149,11 +214,8 @@ def authorize_tool_invocation(user: Any, context: str, tool_name: str, args: dic
             message="I can't perform that action.",
         )
 
-    # Convert the Django user to a principal
-    principal = principal_from_user(user)
-
     # Build the protected resource
-    resource = resource_for_tool_call(principal=principal,tool_name=tool_name,args=args,)
+    resource = resource = resource_for_tool_call(principal=principal, tool_name=tool_name, args=args, action=action)
 
     # Build the authorization request
     request = AuthorizationRequest(
@@ -179,7 +241,7 @@ def authorize_tool_invocation(user: Any, context: str, tool_name: str, args: dic
             message="The application did not allow this request.",
             decision=decision,
         )
-
+    
     # If the decision is allowed, return the safe arguments for the tool call and a message indicating that the tool call is allowed
     return ToolCallAuthorization(
         allowed=True,

@@ -8,6 +8,7 @@ executes after the user sends an explicit confirmation command.
 from typing import Any
 
 from apps.authorization import actions
+from apps.authorization.sql_validation import inspect_sql, SQLValidationError
 
 from . import enforcement, tooling
 
@@ -19,6 +20,20 @@ CONFIRM_COMMAND = "confirm"
 CANCEL_COMMAND = "cancel"
 
 
+def side_effect_action(user, context, tool_name, safe_args):
+    """Identify whether an authorized tool call changes data."""
+
+    action = actions.action_for_tool(tool_name)
+
+    if tool_name == actions.TOOL_EXECUTE_SQL:
+        try:
+            operation = inspect_sql(safe_args.get("query"), context, str(user.pk))
+            action = actions.action_for_tool(tool_name, operation.action)
+        except SQLValidationError:
+            return None
+
+    return action if action and actions.is_side_effect_action(action) else None
+
 def request_confirmation_if_needed(user: Any, context: str, session: Any, tool_name: str, safe_args: dict[str, Any]) -> str | None:
     """
     Store an allowed side effect and return a confirmation message.
@@ -26,8 +41,8 @@ def request_confirmation_if_needed(user: Any, context: str, session: Any, tool_n
     Return None for tools that do not have a side effect.
     """
 
-    # get the business action for the selected tool
-    action = actions.action_for_tool(tool_name)
+    # check if the tool is a side effect action and needs confirmation
+    action = side_effect_action(user, context, tool_name, safe_args)
 
     # normal tools such as list, search, and read do not need confirmation
     if action is None or not actions.is_side_effect_action(action):
@@ -40,6 +55,9 @@ def request_confirmation_if_needed(user: Any, context: str, session: Any, tool_n
         "tool_name": tool_name,
         "safe_args": dict(safe_args),
     }
+
+    if tool_name == actions.TOOL_EXECUTE_SQL:
+        return "Updating your profile requires confirmation. Reply CONFIRM to continue or CANCEL to stop."
 
     # show the exact file name without exposing the complete stored path
     if tool_name == actions.TOOL_DELETE_FILE:   
@@ -101,7 +119,7 @@ def confirm_pending_side_effect(user: Any, context: str, session: Any) -> str:
         return "The pending action is no longer valid."
 
     # make sure the stored tool is still classified as a side effect
-    action = actions.action_for_tool(tool_name)
+    action = side_effect_action(user, context, tool_name, safe_args)
 
     if action is None or not actions.is_side_effect_action(action):
         clear_pending_side_effect(session)
