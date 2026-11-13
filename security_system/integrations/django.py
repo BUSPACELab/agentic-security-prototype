@@ -3,6 +3,8 @@
 from inspect import iscoroutinefunction
 from asgiref.sync import sync_to_async
 from django.utils.decorators import sync_and_async_middleware
+import json
+from django.conf import settings
 
 from security_system.context import Principal, SecurityContext, bind_security_context
 
@@ -26,8 +28,24 @@ def _request_security_context(request) -> SecurityContext | None:
     if not user.is_authenticated:
         return None
 
-    # Create the System context using Django's trusted user identity
-    return SecurityContext(principal=Principal(subject=str(user.pk), issuer="django"))
+    # Get optional application-defined security attributes
+    provider = getattr(settings, "SECURITY_CONTEXT_ATTRIBUTES", None)
+
+    if provider is not None and not callable(provider):
+        raise TypeError("SECURITY_CONTEXT_ATTRIBUTES must be callable.")
+
+    attributes = provider(request) if provider is not None else {}
+
+    if not isinstance(attributes, dict) or not all(isinstance(key, str) for key in attributes):
+        raise TypeError("Security attributes must be a dictionary with string keys.")
+
+    try:
+        json.dumps(attributes)
+    except (TypeError, ValueError) as error:
+        raise TypeError("Security attributes must be JSON-serializable.") from error
+
+    # Create the System context using Django's trusted user identity and optional attributes
+    return SecurityContext(principal=Principal(subject=str(user.pk), issuer="django"), attributes=attributes)
 
 
 

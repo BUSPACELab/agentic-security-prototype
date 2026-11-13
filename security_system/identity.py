@@ -154,6 +154,7 @@ def issue_identity(context: SecurityContext) -> str:
         "aud": AUDIENCE,
         "sub": context.principal.subject,
         "actor_issuer": context.principal.issuer,
+        "attributes": context.attributes,
         "iat": now,
         "exp": now + TOKEN_LIFETIME,
     }
@@ -222,7 +223,13 @@ def verify_identity(token: str) -> SecurityContext:
         if actor_issuer is not None and not isinstance(actor_issuer, str):
             raise ValueError("Invalid identity issuer.")
 
-        return SecurityContext(principal=Principal(subject=subject, issuer=actor_issuer))
+        # Recover application attributes from the verified identity
+        attributes = claims.get("attributes", {})
+
+        if not isinstance(attributes, dict) or not all(isinstance(key, str) for key in attributes):
+            raise ValueError("Invalid security attributes.")
+
+        return SecurityContext(principal=Principal(subject=subject, issuer=actor_issuer), attributes=attributes)
 
     except (jwt.PyJWTError, ValueError, TypeError, KeyError) as error:
         raise PermissionError("Invalid MCP identity.") from error

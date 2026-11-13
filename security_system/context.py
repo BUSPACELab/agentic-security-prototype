@@ -3,7 +3,7 @@
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .errors import MissingSecurityContext
 
@@ -37,6 +37,7 @@ class SecurityContext:
     """Hold the security information associated with the current execution."""
 
     principal: Principal
+    attributes: dict[str, object] = field(default_factory=dict)
 
 
 # Store the current application's identity separately for concurrent executions

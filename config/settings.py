@@ -167,3 +167,7 @@ MAX_TOOL_STEPS = int(os.getenv("MAX_TOOL_STEPS", "5"))
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "tmp" / "emails"
 DEFAULT_FROM_EMAIL = "noreply@example.com"
+
+
+# Additional security context attributes provider
+SECURITY_CONTEXT_ATTRIBUTES = lambda request: {"chat_context": {"/chat/files/": "file_chat", "/chat/profile/": "profile_chat"}.get(request.path_info)}
