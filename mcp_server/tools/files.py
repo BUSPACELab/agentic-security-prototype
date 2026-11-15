@@ -70,7 +70,6 @@ def delete_file_impl(path: str) -> str:
     user_id = system.get_current_actor_id()
 
     deleted_root = MCP_ROOT / "_deleted" / user_id
-
     destination = deleted_root / f"{uuid4().hex}_{source.name}"
 
     # Move the file to the "_deleted" folder
