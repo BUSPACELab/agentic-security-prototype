@@ -17,16 +17,28 @@ class ApplicationFilePolicy(FileSystemPolicy):
 
         return Path(settings.MCP_FILESYSTEM_ROOT) / "users" / actor_id
 
-    def allows_read(self, actor_id: str, absolute_path: Path) -> bool:
+    def allows_read(self, context: SecurityContext, absolute_path: Path) -> bool:
         """Return whether the user may read the path."""
+
+        # Only allow file chat and file management contexts to read files
+        if context.attributes.get("chat_context") not in {"file_chat", "file_management"}:
+            return False
+
+        actor_id = context.principal.subject
 
         # This application's users may read files inside their own upload directory
         user_root = self._user_root(actor_id)
 
         return is_path_within(absolute_path, user_root)
 
-    def allows_modify(self, actor_id: str, absolute_path: Path) -> bool:
+    def allows_modify(self, context: SecurityContext, absolute_path: Path) -> bool:
         """Return whether the user may modify the path."""
+
+        # Only allow file chat and file management contexts to modify files
+        if context.attributes.get("chat_context") not in {"file_chat", "file_management"}:
+            return False
+
+        actor_id = context.principal.subject 
 
         # This application's users may modify files inside their own upload directory
         user_root = self._user_root(actor_id)

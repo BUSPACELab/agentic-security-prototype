@@ -73,10 +73,10 @@ class System:
         path = self._require_absolute_path(absolute_path)
 
         # Get the trusted security context for the current execution
-        actor_id = self.get_current_actor_id()
+        context = current_security_context()
 
         # The application decides whether this context may read the resource
-        if self.policy.allows_read(actor_id, path) is not True:
+        if self.policy.allows_read(context, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
@@ -88,10 +88,10 @@ class System:
         path = self._require_absolute_path(absolute_path)
 
         # Get the trusted security context for the current execution
-        actor_id = self.get_current_actor_id()
+        context = current_security_context()
 
         # The application decides whether this context may modify the resource
-        if self.policy.allows_modify(actor_id, path) is not True:
+        if self.policy.allows_modify(context, path) is not True:
             raise PermissionError("Access denied.")
 
         return path
@@ -120,11 +120,11 @@ class System:
             raise NotADirectoryError("Path is not a readable directory.")
 
         # Use the current context when filtering entries
-        actor_id = self.get_current_actor_id()
+        context = current_security_context()
 
         # Helper used to check whether an entry may be exposed
         def is_readable(entry: Path) -> bool:
-            return self.policy.allows_read(actor_id, entry.resolve()) is True
+            return self.policy.allows_read(context, entry.resolve()) is True
 
         readable_entries = []
 

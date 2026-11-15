@@ -170,4 +170,11 @@ DEFAULT_FROM_EMAIL = "noreply@example.com"
 
 
 # Additional security context attributes provider
-SECURITY_CONTEXT_ATTRIBUTES = lambda request: {"chat_context": {"/chat/files/": "file_chat", "/chat/profile/": "profile_chat"}.get(request.path_info)}
+import re
+SECURITY_CONTEXT_ATTRIBUTES = lambda request: {
+    "chat_context": (
+        "file_management"
+        if request.method == "POST" and re.fullmatch(r"/files/\d+/delete/", request.path_info)
+        else {"/chat/files/": "file_chat", "/chat/profile/": "profile_chat"}.get(request.path_info)
+    )
+}
