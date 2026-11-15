@@ -5,7 +5,8 @@ from pathlib import Path
 from django.conf import settings
 
 from security_system.helpers import is_path_within
-from security_system.policy import FileSystemPolicy
+from security_system.policy import FileSystemPolicy, DatabasePolicy, DatabaseReadRule, DatabaseModifyRule
+from security_system.context import SecurityContext
 
 
 class ApplicationFilePolicy(FileSystemPolicy):
@@ -32,3 +33,50 @@ class ApplicationFilePolicy(FileSystemPolicy):
         deleted_root = Path(settings.MCP_FILESYSTEM_ROOT) / "_deleted" / actor_id
 
         return is_path_within(absolute_path, user_root) or is_path_within(absolute_path, deleted_root)
+
+    
+class ApplicationDatabasePolicy(DatabasePolicy):
+    """Define database permissions for this application."""
+
+    def read_rules(self, context: SecurityContext) -> tuple[DatabaseReadRule, ...]:
+        """Return the permitted database read operations."""
+
+        chat_context = context.attributes.get("chat_context")
+
+        if chat_context == "file_chat":
+            return (
+                DatabaseReadRule(
+                    table="files_uploadedfile",
+                    columns=frozenset({"id", "title", "file", "created_at"}),
+                    access_by="owner_id",
+                ),
+            )
+
+        if chat_context == "profile_chat":
+            return (
+                DatabaseReadRule(
+                    table="auth_user",
+                    columns=frozenset({"id", "username", "email", "first_name", "last_name"}),
+                    access_by="id",
+                ),
+            )
+
+        return ()
+
+    def modify_rules(self, context: SecurityContext) -> tuple[DatabaseModifyRule, ...]:
+        """Return the permitted database modification operations."""
+
+        chat_context = context.attributes.get("chat_context")
+
+        if chat_context == "profile_chat":
+            return (
+                DatabaseModifyRule(
+                    table="auth_user",
+                    allowed_actions=frozenset({"UPDATE"}),
+                    columns=frozenset({"username", "email", "first_name", "last_name"}),
+                    filter_columns=frozenset({"id", "username", "email", "first_name", "last_name"}),
+                    access_by="id",
+                ),
+            )
+
+        return ()

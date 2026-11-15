@@ -22,3 +22,5 @@ nbformat>=5.10
 
 PyJWT[crypto]>=2.10,<3
 filelock>=3.12,<4
+
+sqlglot

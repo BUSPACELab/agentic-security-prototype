@@ -51,6 +51,14 @@ def send_password_reset_email(
             "use_https": use_https,
         },
     )
+def get_database_schema() -> str:
+    """Get the database schema through the custom MCP server."""
+    return call_custom_mcp_tool("get_database_schema", {})
+
+
+def execute_sql(query: str) -> str:
+    """Execute an SQL query through the custom MCP server."""
+    return call_custom_mcp_tool("execute_sql", {"query": query})
 
 
 # These just to expose the above functions as tools to be used by the agent
@@ -64,10 +72,19 @@ def send_password_reset_email_tool(
 
     return send_password_reset_email(email, domain, use_https)
 
-
 def get_tools():
     """Return the tools used by the agent."""
 
+    @tool("get_database_schema")
+    def get_database_schema_tool() -> str:
+        """Get the database tables, columns, and relationships."""
+        return get_database_schema()
+
+    @tool("execute_sql")
+    def execute_sql_tool(query: str) -> str:
+        """Execute an SQL query to read or modify database records."""
+        return execute_sql(query)
+    
     @tool("list_files")
     def list_files_tool(path: str = "") -> str:
         """List uploaded files and folders by path."""
@@ -93,9 +110,10 @@ def get_tools():
         return delete_file(path)
 
     return [
-        list_files_tool,
-        search_files_tool,
-        read_file_tool,
-        delete_file_tool,
-        send_password_reset_email_tool,
+    list_files_tool,
+    search_files_tool,
+    read_file_tool,
+    delete_file_tool,
+    get_database_schema_tool,
+    execute_sql_tool,
     ]
