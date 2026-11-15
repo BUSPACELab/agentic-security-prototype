@@ -209,9 +209,20 @@ class System:
         if not source.is_file():
             raise FileNotFoundError("Path is not a readable regular file.")
 
+        # Ensure the destination is a writable directory before moving
+        self.mkdir(destination.parent, parents=True, exist_ok=True)
+
         # Perform the protected operation only after authorization succeeds
         source.move(destination)
 
+    def mkdir(self, absolute_path, parents: bool = False, exist_ok: bool = False) -> None:
+        """Create a directory only after authorization."""
+
+        # Authorize the resource before changing the filesystem
+        path = self._authorize_modify(absolute_path)
+
+        # Perform the protected operation only after authorization succeeds
+        path.mkdir(parents=parents, exist_ok=exist_ok)
 
 
     # -------------------- Database access enforcement --------------------
