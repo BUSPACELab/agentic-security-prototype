@@ -22,3 +22,6 @@ tmp/
 
 # Tests
 tests/notebooks/.ipynb_checkpoints/
+
+# Security system private keys
+.security_system/
