@@ -32,3 +32,6 @@ progress_before_break.md
 
 # Runtime authorization audit logs
 authorization.log*
+
+# Security system private keys
+.security_system/
