@@ -1,0 +1,9 @@
+
+{
+  "repository": "https://github.com/BUSPACELab/agentic-security-prototype.git",
+  "branches": {
+    "v1": "impl/baseline",
+    "v2": "impl/application-policy-enforcement",
+    "v3": "impl/system-enforcement"
+  }
+}
