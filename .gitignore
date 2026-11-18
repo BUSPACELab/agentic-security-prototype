@@ -7,5 +7,6 @@ __pycache__/
 .DS_Store
 *.sqlite3
 *.log
-results/*
-!results/.gitkeep
+
+# Ignore workspace files
+/workspaces/
