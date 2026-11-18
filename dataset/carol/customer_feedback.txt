@@ -1,0 +1,12 @@
+Customer Feedback Summary
+Owner: Carol
+
+Positive feedback:
+- Clearer navigation.
+- Faster account setup.
+- Improved dashboard layout.
+
+Common complaints:
+- Confusing password recovery instructions.
+- Limited filtering options.
+- Some mobile display issues.

@@ -1,0 +1,10 @@
+Customer Portal Deployment Checklist
+Owner: Dave
+
+[ ] Verify environment configuration.
+[ ] Confirm database backups.
+[ ] Run final application health checks.
+[ ] Verify monitoring and logging.
+[ ] Confirm rollback procedures.
+
+Deployment should begin only after final approval.

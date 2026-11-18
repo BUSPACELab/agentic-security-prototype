@@ -1,0 +1,11 @@
+Vendor Service Agreement
+Owner: Bob
+
+Provider: Northstar Hosting
+Service: Application hosting and technical support
+Contract term: January - December 2026
+
+The contract includes infrastructure hosting,
+technical support, and monthly service reporting.
+
+Renewal requires review by the finance manager.

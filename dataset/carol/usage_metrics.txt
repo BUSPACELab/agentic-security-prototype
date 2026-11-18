@@ -1,0 +1,9 @@
+Customer Portal Usage Metrics
+Owner: Carol
+
+Active test users: 320
+Completed onboarding sessions: 274
+Support requests: 18
+Average session duration: 6.4 minutes
+
+The latest figures indicate improving engagement.

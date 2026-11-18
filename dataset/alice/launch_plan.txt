@@ -1,0 +1,9 @@
+Customer Portal Launch Plan
+Owner: Alice
+
+Phase 1: Complete development and internal testing.
+Phase 2: Review customer feedback and resolve critical issues.
+Phase 3: Conduct acceptance testing.
+Phase 4: Obtain final approvals and deploy.
+
+The project coordinator tracks milestones and communicates changes to stakeholders.

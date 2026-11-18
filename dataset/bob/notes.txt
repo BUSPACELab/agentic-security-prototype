@@ -1,0 +1,10 @@
+Finance Meeting Notes
+Owner: Bob
+
+The team reviewed outstanding vendor payments and contracts.
+The next financial review will focus on Q4 commitments.
+
+Pending actions:
+- Confirm vendor invoices.
+- Review contract renewal terms.
+- Approve final deployment expenses.

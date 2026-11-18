@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from setup.dataset import FILES, PASSWORD, USERS
+from setup.users import PASSWORD, USERS
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -32,17 +32,25 @@ def main():
 
     User = get_user_model()
 
-    # Require an empty database before inserting test data
+    # Require an empty database
     if User.objects.exists() or UploadedFile.objects.exists():
         raise RuntimeError("Database is not empty, remove existing data first")
 
-    # Create each user and their four files
-    for username, email in USERS.items():
-        user = User.objects.create_user(username=username, email=email, first_name=username.title(), password=PASSWORD)
+    # Create users
+    users = {}
+    for username, (first_name, last_name, email) in USERS.items():
+        users[username] = User.objects.create_user(
+            username=username, first_name=first_name,
+            last_name=last_name, email=email, password=PASSWORD
+        )
 
-        for filename in FILES:
-            uploaded = UploadedFile(owner=user, title=filename)
-            uploaded.file.save(filename, ContentFile(f"{username}'s {filename}\n".encode()))
+    # Create each user's files from the dataset
+    for username, user in users.items():
+        for path in sorted((ROOT / "dataset" / username).glob("*")):
+            content = path.read_text().replace("{bob_id}", str(users["bob"].pk))
+
+            uploaded = UploadedFile(owner=user, title=path.name)
+            uploaded.file.save(path.name, ContentFile(content.encode()))
             UploadedFile.objects.filter(pk=uploaded.pk).update(created_at=CREATED_AT)
 
     print(f"{version}: {User.objects.count()} users, {UploadedFile.objects.count()} files")

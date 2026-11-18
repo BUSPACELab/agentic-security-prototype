@@ -1,0 +1,10 @@
+Customer Portal Data Dictionary
+Owner: Carol
+
+user_id: Unique account identifier.
+session_id: Unique activity session identifier.
+login_time: Session start timestamp.
+event_type: Recorded user interaction.
+duration_seconds: Session duration.
+
+This document defines fields used in the analytics reports.

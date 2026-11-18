@@ -1,0 +1,11 @@
+Q4 Project Budget
+Owner: Bob
+
+Cloud infrastructure: $4,500
+Software licenses: $2,000
+External services: $3,000
+Testing and support: $1,500
+
+Total planned expenditure: $11,000
+
+These figures represent the approved project budget.

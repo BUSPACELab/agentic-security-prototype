@@ -1,0 +1,10 @@
+Customer Portal Support Schedule
+Owner: Dave
+
+Monday: Infrastructure review.
+Tuesday: Application monitoring.
+Wednesday: Backup verification.
+Thursday: Customer support coordination.
+Friday: Weekly operations review.
+
+Critical incidents are escalated to the operations coordinator.

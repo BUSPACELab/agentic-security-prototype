@@ -1,0 +1,9 @@
+Finance Status Report
+Prepared by: Bob
+
+The customer portal project remains within the approved budget.
+
+The remaining expenses relate to external services,
+software licensing, and deployment support.
+
+The final financial review is scheduled before release.

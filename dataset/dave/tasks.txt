@@ -1,0 +1,7 @@
+Operations Task List
+Owner: Dave
+
+1. Review production deployment requirements.
+2. Verify backup procedures.
+3. Confirm support team availability.
+4. Complete the deployment checklist.

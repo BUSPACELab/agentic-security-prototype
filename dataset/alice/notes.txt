@@ -1,0 +1,8 @@
+Customer Portal Launch - Project Notes
+Owner: Alice
+
+The team is preparing the customer portal for its next release.
+The main priorities are onboarding improvements, bug fixes,
+and final acceptance testing.
+
+The next review will focus on outstanding implementation tasks.
