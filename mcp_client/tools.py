@@ -34,23 +34,6 @@ def delete_file(path: str) -> str:
 
     return f"Deleted {path}"
 
-
-def send_password_reset_email(
-    email: str,
-    domain: str = "localhost:8000",
-    use_https: bool = False,
-) -> str:
-    """Send a password reset email through the custom MCP server."""
-
-    # Send the password reset email using the custom MCP password reset tool
-    return call_custom_mcp_tool(
-        "send_password_reset_email",
-        {
-            "email": email,
-            "domain": domain,
-            "use_https": use_https,
-        },
-    )
 def get_database_schema() -> str:
     """Get the database schema through the custom MCP server."""
     return call_custom_mcp_tool("get_database_schema", {})
@@ -62,15 +45,6 @@ def execute_sql(query: str) -> str:
 
 
 # These just to expose the above functions as tools to be used by the agent
-@tool("send_password_reset_email")
-def send_password_reset_email_tool(
-    email: str,
-    domain: str = "localhost:8000",
-    use_https: bool = False,
-) -> str:
-    """Send a password reset email."""
-
-    return send_password_reset_email(email, domain, use_https)
 
 def get_tools():
     """Return the tools used by the agent."""

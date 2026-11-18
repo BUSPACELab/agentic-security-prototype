@@ -4,9 +4,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
-from django.contrib import messages
 
-from mcp_client.tools import send_password_reset_email as mcp_send_password_reset_email
 
 class SignUpForm(UserCreationForm):
     """Signup form with account profile fields."""
@@ -101,22 +99,3 @@ def profile(request):
             "profile_user": request.user,
         },
     )
-
-@login_required
-def profile_password_reset(request):
-    """Send a password reset email from the UI using the same MCP profile tool."""
-
-    # If the request is a POST the user wants to send a password reset email
-    if request.method == "POST":
-
-        try:
-            mcp_send_password_reset_email(
-                email=request.user.email,
-                domain=request.get_host(),
-                use_https=request.is_secure(),
-            ) 
-            messages.success(request,"Email sent successfully to your registered email. Follow the steps in the email to change your password.",)
-        except  Exception:
-            messages.error(request, "Error happened while sending password reset email. Please try again later!")
-
-    return redirect("profile")
