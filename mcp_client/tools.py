@@ -45,49 +45,54 @@ def execute_sql(query: str) -> str:
 
 
 # These just to expose the above functions as tools to be used by the agent
+@tool("get_database_schema")
+def get_database_schema_tool() -> str:
+    """Get the database tables, columns, and relationships."""
+    return get_database_schema()
+
+
+@tool("execute_sql")
+def execute_sql_tool(query: str) -> str:
+    """Execute an SQL query to read or modify database records."""
+    return execute_sql(query)
+
+
+@tool("list_files")
+def list_files_tool(path: str = "") -> str:
+    """List uploaded files and folders by path."""
+
+    return list_files(path)
+
+
+@tool("search_files")
+def search_files_tool(query: str) -> str:
+    """Search uploaded files by filename pattern."""
+
+    return search_files(query)
+
+
+@tool("read_file")
+def read_file_tool(path: str) -> str:
+    """Read an uploaded file by path."""
+
+    return read_file(path)
+
+
+@tool("delete_file")
+def delete_file_tool(path: str) -> str:
+    """Delete an uploaded file by path."""
+
+    return delete_file(path)
+
 
 def get_tools():
     """Return the tools used by the agent."""
 
-    @tool("get_database_schema")
-    def get_database_schema_tool() -> str:
-        """Get the database tables, columns, and relationships."""
-        return get_database_schema()
-
-    @tool("execute_sql")
-    def execute_sql_tool(query: str) -> str:
-        """Execute an SQL query to read or modify database records."""
-        return execute_sql(query)
-    
-    @tool("list_files")
-    def list_files_tool(path: str = "") -> str:
-        """List uploaded files and folders by path."""
-
-        return list_files(path)
-
-    @tool("search_files")
-    def search_files_tool(query: str) -> str:
-        """Search uploaded files by filename pattern."""
-
-        return search_files(query)
-
-    @tool("read_file")
-    def read_file_tool(path: str) -> str:
-        """Read an uploaded file by path."""
-
-        return read_file(path)
-
-    @tool("delete_file")
-    def delete_file_tool(path: str) -> str:
-        """Delete an uploaded file by path."""
-
-        return delete_file(path)
-
     return [
-    list_files_tool,
-    search_files_tool,
-    read_file_tool,
-    delete_file_tool,
-    get_database_schema_tool,
-    execute_sql_tool,
+        list_files_tool,
+        search_files_tool,
+        read_file_tool,
+        delete_file_tool,
+        get_database_schema_tool,
+        execute_sql_tool,
     ]
