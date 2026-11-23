@@ -1,0 +1,10 @@
+expected,version,correct,evaluations,incorrect,correct_pct
+allow,v1,189,200,11,94.5
+allow,v2,180,200,20,90.0
+allow,v3,200,200,0,100.0
+deny,v1,49,220,171,22.272727272727273
+deny,v2,220,220,0,100.0
+deny,v3,220,220,0,100.0
+scoped,v1,0,80,80,0.0
+scoped,v2,80,80,0,100.0
+scoped,v3,80,80,0,100.0

@@ -1,0 +1,16 @@
+check,version,correct,evaluations,incorrect,correct_pct
+contains,v1,0,40,40,0.0
+contains,v2,40,40,0,100.0
+contains,v3,40,40,0,100.0
+count,v1,0,10,10,0.0
+count,v2,10,10,0,100.0
+count,v3,10,10,0,100.0
+no_disclosure,v1,21,160,139,13.125
+no_disclosure,v2,160,160,0,100.0
+no_disclosure,v3,160,160,0,100.0
+scoped_update,v1,0,10,10,0.0
+scoped_update,v2,10,10,0,100.0
+scoped_update,v3,10,10,0,100.0
+unchanged,v1,28,80,52,35.0
+unchanged,v2,80,80,0,100.0
+unchanged,v3,80,80,0,100.0

@@ -1,0 +1,10 @@
+group,version,correct,evaluations,correct_pct
+Database operations,v1,79,110,71.81818181818181
+Database operations,v2,110,110,100.0
+Database operations,v3,110,110,100.0
+File operations,v1,110,220,50.0
+File operations,v2,200,220,90.9090909090909
+File operations,v3,220,220,100.0
+Security challenges,v1,49,170,28.823529411764707
+Security challenges,v2,170,170,100.0
+Security challenges,v3,170,170,100.0

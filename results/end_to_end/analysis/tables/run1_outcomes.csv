@@ -1,0 +1,10 @@
+expected,version,correct,scenarios,correct_pct
+allow,v1,19,20,95.0
+allow,v2,18,20,90.0
+allow,v3,20,20,100.0
+deny,v1,4,22,18.181818181818183
+deny,v2,22,22,100.0
+deny,v3,22,22,100.0
+scoped,v1,0,8,0.0
+scoped,v2,8,8,100.0
+scoped,v3,8,8,100.0
