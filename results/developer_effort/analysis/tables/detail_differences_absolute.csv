@@ -1,0 +1,16 @@
+,Manual vs Baseline,System vs Baseline,System vs Manual
+Application LOC,694.0,70.0,-624.0
+MCP client LOC,87.0,4.0,-83.0
+MCP server LOC,20.0,-16.0,-36.0
+Other security code,678.0,14.0,-664.0
+Remaining code,-36.0,-5.0,31.0
+Application CC,170.0,12.0,-158.0
+MCP client CC,31.0,2.0,-29.0
+MCP server CC,5.0,-6.0,-11.0
+Mean CC,1.6182659932659933,-0.08348512446873113,-1.7017511177347244
+Median CC,1.0,0.0,-1.0
+Maximum CC,36.0,1.0,-35.0
+Security-related functions,53.0,5.0,-48.0
+Security-related mean cc,,,-2.3660377358490567
+Security-related median cc,,,-1.0
+Security-related maximum cc,,,-42.0

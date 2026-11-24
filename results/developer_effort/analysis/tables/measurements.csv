@@ -1,0 +1,9 @@
+,v1,v2,v3
+Total LOC,651,1452,709
+Security LOC,0,837,63
+Security checks,0,71,7
+Policy LOC,0,159,49
+Policies,0,10,5
+Functions,54,88,61
+Overall CC,101,307,109
+Security-related CC,0,242,11

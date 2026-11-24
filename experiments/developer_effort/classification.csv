@@ -1,0 +1,179 @@
+version,file,kind,name,start,end
+v2,apps/agents/enforcement.py,security_code,"Custom authorization, resource resolution and result filtering",11,235
+v2,apps/agents/enforcement.py,security_code,Return denied or authorized invocation with trusted arguments,238,255
+v2,apps/agents/enforcement.py,policy_code,Context-specific schema table mapping,158,158
+v2,apps/agents/enforcement.py,security_check,Require principal identity for file collection resource,49,50
+v2,apps/agents/enforcement.py,security_check,Reject unresolved file path,79,80
+v2,apps/agents/enforcement.py,security_check,Reject unknown file resource,86,87
+v2,apps/agents/enforcement.py,security_check,Require principal identity for account resource,108,109
+v2,apps/agents/enforcement.py,security_check,Reject unavailable or invalid schema,159,160
+v2,apps/agents/enforcement.py,security_check,Reject schema missing allowed columns,165,166
+v2,apps/agents/enforcement.py,security_check,Block invalid SQL,199,200
+v2,apps/agents/enforcement.py,security_check,Block unknown business action,210,215
+v2,apps/agents/enforcement.py,security_check,Enforce authorization decision,235,243
+v2,apps/agents/service.py,security_code,Import custom invocation and confirmation enforcement,7,9
+v2,apps/agents/service.py,security_code,Pass authenticated user and session to agent,80,80
+v2,apps/agents/service.py,security_code,Select context-authorized tools,90,90
+v2,apps/agents/service.py,security_code,Restrict invocation to exposed tools,138,143
+v2,apps/agents/service.py,security_code,Authorization and confirmation enforcement,148,157
+v2,apps/agents/service.py,security_code,Invoke with authorized arguments,160,160
+v2,apps/agents/service.py,security_code,Filter returned tool data,164,164
+v2,apps/agents/service.py,security_check,Block tool outside exposed set,141,142
+v2,apps/agents/service.py,security_check,Block unauthorized invocation,150,151
+v2,apps/agents/service.py,security_check,Prevent execution pending confirmation,156,157
+v2,apps/agents/side_effects.py,security_code,Application-controlled side-effect confirmation and reauthorization,8,154
+v2,apps/agents/side_effects.py,security_check,Determine whether operation requires confirmation,48,49
+v2,apps/agents/side_effects.py,security_check,Require explicit confirmation or cancellation command,80,87
+v2,apps/agents/side_effects.py,security_check,Block unrelated messages while confirmation pending,90,91
+v2,apps/agents/side_effects.py,security_check,Require pending operation,101,102
+v2,apps/agents/side_effects.py,security_check,Require same user,105,107
+v2,apps/agents/side_effects.py,security_check,Require same chat context,110,112
+v2,apps/agents/side_effects.py,security_check,Validate pending invocation data,117,119
+v2,apps/agents/side_effects.py,security_check,Require action to remain a side effect,124,126
+v2,apps/agents/side_effects.py,security_check,Require tool to remain available,132,134
+v2,apps/agents/side_effects.py,security_check,Reauthorize before execution,139,141
+v2,apps/agents/tooling.py,security_code,Trusted principal construction and context-specific tool exposure,10,91
+v2,apps/agents/tooling.py,security_check,Require authenticated user ID when constructing principal,34,34
+v2,apps/agents/tooling.py,security_check,Gate tool exposure on authorization decision,88,89
+v2,apps/authorization/__init__.py,security_code,Authorization package exports,8,18
+v2,apps/authorization/actions.py,security_code,"Authorization vocabulary, tool mappings and action resolution",12,141
+v2,apps/authorization/actions.py,policy_code,Application tool and context restrictions,65,81
+v2,apps/authorization/actions.py,policy_code,Actions requiring confirmation,85,85
+v2,apps/authorization/actions.py,security_check,Reject unknown tool definition,117,118
+v2,apps/authorization/actions.py,security_check,Verify requested action belongs to tool,120,121
+v2,apps/authorization/actions.py,security_check,Reject unresolved or ambiguous action,123,126
+v2,apps/authorization/actions.py,security_check,Test allowed tool context,134,134
+v2,apps/authorization/audit.py,security_code,Authorization decision audit logging,9,53
+v2,apps/authorization/engine.py,security_code,Application policy decision engine,14,66
+v2,apps/authorization/engine.py,security_check,Explicit deny takes precedence,35,41
+v2,apps/authorization/engine.py,security_check,Permit only on matching policy; otherwise deny,52,66
+v2,apps/authorization/policies.py,security_code,"Policy representation, predicates, declarations and validation",14,241
+v2,apps/authorization/policies.py,policy_code,"Authentication, ownership and context requirements",70,104
+v2,apps/authorization/policies.py,policy_code,Explicit application policy set,108,216
+v2,apps/authorization/policies.py,security_check,Evaluate policy match,51,57
+v2,apps/authorization/policies.py,security_check,Verify trusted request consistency,64,67
+v2,apps/authorization/policies.py,security_check,Require authenticated principal,72,72
+v2,apps/authorization/policies.py,security_check,Verify resource ownership,77,81
+v2,apps/authorization/policies.py,security_check,Verify file tool eligibility,91,95
+v2,apps/authorization/policies.py,security_check,Verify profile tool eligibility,100,104
+v2,apps/authorization/policies.py,policy,Expose file tools in file context,112,119
+v2,apps/authorization/policies.py,policy,Expose profile tools in profile context,122,129
+v2,apps/authorization/policies.py,policy,Owner may list files,134,141
+v2,apps/authorization/policies.py,policy,Owner may search files,144,151
+v2,apps/authorization/policies.py,policy,Owner may read file,155,162
+v2,apps/authorization/policies.py,policy,Owner may delete file,165,172
+v2,apps/authorization/policies.py,policy,Authenticated user may read schema,177,184
+v2,apps/authorization/policies.py,policy,Owner may read file metadata,187,194
+v2,apps/authorization/policies.py,policy,Owner may read account,198,205
+v2,apps/authorization/policies.py,policy,Owner may update account,208,215
+v2,apps/authorization/sql_validation.py,security_code,"SQL validation, access restrictions and ownership rewriting",4,111
+v2,apps/authorization/sql_validation.py,policy_code,Application-readable and writable columns,21,26
+v2,apps/authorization/sql_validation.py,policy_code,"Allowed table, operation, context and ownership mapping",69,74
+v2,apps/authorization/sql_validation.py,policy_code,Application-specific writable-column restriction,93,93
+v2,apps/authorization/sql_validation.py,policy_code,Apply application read-column projection,101,101
+v2,apps/authorization/sql_validation.py,policy_code,Application readable-column restriction,104,104
+v2,apps/authorization/sql_validation.py,policy_code,Require current-user row scope,110,110
+v2,apps/authorization/sql_validation.py,security_check,Reject invalid or oversized query,43,44
+v2,apps/authorization/sql_validation.py,security_check,Reject invalid SQL or user identity,46,51
+v2,apps/authorization/sql_validation.py,security_check,Require positive user and supported single statement,54,55
+v2,apps/authorization/sql_validation.py,security_check,Restrict query to one unqualified table,61,62
+v2,apps/authorization/sql_validation.py,security_check,Reject context-incompatible table or operation,69,74
+v2,apps/authorization/sql_validation.py,security_check,Reject unsupported SQL clause,79,80
+v2,apps/authorization/sql_validation.py,security_check,Reject unsupported SQL structure,86,87
+v2,apps/authorization/sql_validation.py,security_check,Reject invalid update expressions,90,98
+v2,apps/authorization/sql_validation.py,security_check,Restrict wildcard projection,100,101
+v2,apps/authorization/sql_validation.py,security_check,Reject unauthorized columns,104,105
+v2,apps/authorization/sql_validation.py,security_check,Reject remaining wildcards,107,108
+v2,apps/authorization/sql_validation.py,security_check,Enforce current-user row scope,110,110
+v2,apps/authorization/types.py,security_code,"Authorization request, principal, resource, context and decision types",19,100
+v2,apps/conversations/views.py,security_code,Import confirmation handling,4,4
+v2,apps/conversations/views.py,security_code,Intercept confirmation before LLM,47,50
+v2,apps/conversations/views.py,security_code,Pass trusted user and session to agent,60,60
+v2,apps/conversations/views.py,security_check,Only send non-confirmation messages to agent,50,50
+v2,config/settings.py,security_code,Authorization-specific audit log configuration,169,194
+v2,mcp_client/client.py,security_code,Support user-scoped subprocess root,16,16
+v2,mcp_client/client.py,security_code,Select scoped root,23,23
+v2,mcp_client/client.py,security_code,Propagate scoped root and separate deleted root,34,35
+v2,mcp_client/client.py,security_code,Receive scoped root for tool invocation,46,46
+v2,mcp_client/client.py,security_code,Build scoped subprocess configuration,49,49
+v2,mcp_client/client.py,security_code,Launch subprocess with scoped configuration,51,51
+v2,mcp_client/client.py,security_code,Accept scoped filesystem root,92,92
+v2,mcp_client/client.py,security_code,Pass scoped root to tool call,95,95
+v2,mcp_client/path_helpers.py,security_code,Path validation and user-scoped path construction,23,130
+v2,mcp_client/path_helpers.py,security_code,Reject missing identity and normalize path,132,138
+v2,mcp_client/path_helpers.py,security_code,Resolve path within current user root,140,158
+v2,mcp_client/path_helpers.py,security_code,Reject cross-user paths and enforce root permission,160,171
+v2,mcp_client/path_helpers.py,security_code,Return scoped paths or reject forbidden root,173,184
+v2,mcp_client/path_helpers.py,policy_code,Exclude storage-root and deleted-file path components,84,89
+v2,mcp_client/path_helpers.py,policy_code,Application user directory convention,143,143
+v2,mcp_client/path_helpers.py,policy_code,Restrict canonical paths to current user,155,157
+v2,mcp_client/path_helpers.py,policy_code,Reject another user canonical path,160,160
+v2,mcp_client/path_helpers.py,security_check,Require permitted root or nonempty path,49,53
+v2,mcp_client/path_helpers.py,security_check,Reject null bytes,56,57
+v2,mcp_client/path_helpers.py,security_check,Reject home-relative path,60,61
+v2,mcp_client/path_helpers.py,security_check,Reject absolute path,68,69
+v2,mcp_client/path_helpers.py,security_check,Reject drive-qualified path,72,73
+v2,mcp_client/path_helpers.py,security_check,Reject traversal components,76,77
+v2,mcp_client/path_helpers.py,security_check,Reject empty path parts,80,81
+v2,mcp_client/path_helpers.py,security_check,Reject storage-root prefix,84,85
+v2,mcp_client/path_helpers.py,security_check,Reject deleted-file path,88,89
+v2,mcp_client/path_helpers.py,security_check,Require user ID,129,132
+v2,mcp_client/path_helpers.py,security_check,Reject invalid normalized path,137,140
+v2,mcp_client/path_helpers.py,security_check,Reject paths for another user,157,160
+v2,mcp_client/path_helpers.py,security_check,Reject root when not allowed,167,173
+v2,mcp_client/tools.py,security_code,Path and settings for user-scoped root,1,2
+v2,mcp_client/tools.py,security_code,User root and validation helper,8,14
+v2,mcp_client/tools.py,security_code,Validate and scope list operation,16,26
+v2,mcp_client/tools.py,security_code,Validate and scope search operation,29,39
+v2,mcp_client/tools.py,security_code,Validate and scope read operation,42,52
+v2,mcp_client/tools.py,security_code,Validate and scope delete and metadata removal,55,70
+v2,mcp_client/tools.py,security_code,Require identity for file tool exposure,101,109
+v2,mcp_client/tools.py,security_code,Bind trusted user ID to file tool wrappers,111,133
+v2,mcp_client/tools.py,policy_code,Application per-user MCP root,14,14
+v2,mcp_client/tools.py,policy_code,Allow root for listing,19,19
+v2,mcp_client/tools.py,policy_code,Allow root for searching,32,32
+v2,mcp_client/tools.py,policy_code,Disallow root for reading,45,45
+v2,mcp_client/tools.py,policy_code,Disallow root for deletion,59,59
+v2,mcp_client/tools.py,policy_code,Restrict metadata deletion to owner,70,70
+v2,mcp_client/tools.py,policy_code,Do not expose file tools without identity,105,109
+v2,mcp_client/tools.py,security_check,Reject unauthorized list path,21,22
+v2,mcp_client/tools.py,security_check,Reject unauthorized search path,34,35
+v2,mcp_client/tools.py,security_check,Reject unauthorized read path,47,48
+v2,mcp_client/tools.py,security_check,Reject unauthorized delete path,61,62
+v2,mcp_client/tools.py,security_check,Enforce metadata ownership,70,70
+v2,mcp_client/tools.py,security_check,Restrict file tool exposure without identity,105,109
+v2,mcp_server/config.py,security_code,Configure separate deleted-file root,43,43
+v2,mcp_server/tools/files.py,security_code,Import filesystem roots,14,14
+v2,mcp_server/tools/files.py,security_code,Enforce resolved path containment,17,33
+v2,mcp_server/tools/files.py,security_code,Reject paths outside root and normalize output paths,35,39
+v2,mcp_server/tools/files.py,security_code,Enforce containment of returned path,47,50
+v2,mcp_server/tools/files.py,security_code,Reject returned path outside root,52,52
+v2,mcp_server/tools/files.py,security_code,Resolve authorized list path,65,65
+v2,mcp_server/tools/files.py,security_code,Return contained relative file path,69,69
+v2,mcp_server/tools/files.py,security_code,Return contained relative entries,74,74
+v2,mcp_server/tools/files.py,security_code,Resolve authorized search path,88,88
+v2,mcp_server/tools/files.py,security_code,Return contained relative match,92,92
+v2,mcp_server/tools/files.py,security_code,Return contained relative matches,104,104
+v2,mcp_server/tools/files.py,security_code,Resolve authorized read path,117,117
+v2,mcp_server/tools/files.py,security_code,Enforce delete containment and protect root,131,135
+v2,mcp_server/tools/files.py,security_code,Use separate deleted root,137,137
+v2,mcp_server/tools/files.py,policy_code,Prohibit deletion of user root,134,135
+v2,mcp_server/tools/files.py,security_check,Reject resolved path outside MCP root,29,35
+v2,mcp_server/tools/files.py,security_check,Reject returned path outside MCP root,47,52
+v2,mcp_server/tools/files.py,security_check,Prevent deletion of MCP root,134,135
+v3,apps/policies/policy.py,security_code,Application-defined file and database access policies,3,94
+v3,apps/policies/policy.py,policy_code,Application-specific file and database restrictions,12,94
+v3,apps/policies/policy.py,security_check,Restrict file reads by application context,24,25
+v3,apps/policies/policy.py,security_check,Restrict read path to owner directory,32,32
+v3,apps/policies/policy.py,security_check,Restrict file modification by application context,38,39
+v3,apps/policies/policy.py,security_check,Restrict modification to owner or owner-deleted directory,47,47
+v3,apps/policies/policy.py,security_check,Select file-context database read rule,58,65
+v3,apps/policies/policy.py,security_check,Select profile-context read rule or deny other contexts,67,76
+v3,apps/policies/policy.py,security_check,Permit profile modification rule only in profile context,83,94
+v3,apps/policies/policy.py,policy,File read policy,20,32
+v3,apps/policies/policy.py,policy,File modification policy,34,47
+v3,apps/policies/policy.py,policy,File metadata read rule,60,64
+v3,apps/policies/policy.py,policy,Account read rule,69,73
+v3,apps/policies/policy.py,policy,Account modification rule,85,91
+v3,config/settings.py,security_code,Configure security context middleware,64,64
+v3,config/settings.py,security_code,Map trusted request attributes to application security contexts,173,180

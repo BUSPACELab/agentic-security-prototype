@@ -1,0 +1,9 @@
+metric,V2 - V1,V2 vs V1 (%),V3 - V1,V3 vs V1 (%),V3 - V2,V3 vs V2 (%)
+Application LOC,694,153.5,70,15.5,-624,-54.5
+MCP client LOC,87,87.9,4,4.0,-83,-44.6
+MCP server LOC,20,20.0,-16,-16.0,-36,-30.0
+Application security LOC,837,N/A,63,N/A,-774,-92.5
+Application policy LOC,159,N/A,49,N/A,-110,-69.2
+Total LOC,801,123.0,58,8.9,-743,-51.2
+Security checks (count),71,N/A,7,N/A,-64,-90.1
+Policies (count),10,N/A,5,N/A,-5,-50.0

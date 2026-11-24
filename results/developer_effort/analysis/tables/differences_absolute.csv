@@ -1,0 +1,9 @@
+,Manual vs Baseline,System vs Baseline,System vs Manual
+Total LOC,801,58,-743
+Security LOC,837,63,-774
+Security checks,71,7,-64
+Policy LOC,159,49,-110
+Policies,10,5,-5
+Functions,34,7,-27
+Overall CC,206,8,-198
+Security-related CC,242,11,-231
