@@ -1,5 +1,5 @@
 from django.conf import settings
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage, messages_to_dict, messages_from_dict
 from datetime import datetime, timezone
 
 from .providers import get_chat_model
@@ -77,7 +77,7 @@ For unrelated questions, answer normally without using tools.
 """.strip()
 
 
-def run_agent(user, context, history, session):
+def run_agent(user, context, history, session, resume=None):
     """Run one assistant response for the selected chat context."""
 
     # --- DEBUGGING ---
@@ -111,22 +111,32 @@ def run_agent(user, context, history, session):
     tools_by_name = {tool.name: tool for tool in tools}
 
     # run a loop where the model generates responses and calls tools until it either stops generating tool calls or reaches a maximum number of steps to prevent infinite loops
-    for _ in range(settings.MAX_TOOL_STEPS):
-        # invoke the model with the current messages and get the response which may include tool calls
-        response = model.invoke(messages)
-        # add the model's response to the messages list so that the next iteration includes it in the context for generating the next response
-        messages.append(response)
+    for step in range(resume["step"] if resume else 0, settings.MAX_TOOL_STEPS):
+        if resume:
+            # restore the agent state and add the result of the confirmed tool call
+            messages = messages_from_dict(resume["messages"])
+            tool_calls = resume["calls"]
+            messages.append(ToolMessage(content=resume["result"], tool_call_id=tool_calls[0]["id"]))
 
-        # check if the model's response includes any tool calls. If not, we can return the content of the response as the final answer. If there are tool calls, we need to execute them and add their results back to the messages list for the next iteration.
-        tool_calls = getattr(response, "tool_calls", None) or []
+            # continue with the remaining tool calls
+            tool_calls = tool_calls[1:]
+            resume = None
+        else:
+            # invoke the model with the current messages and get the response which may include tool calls
+            response = model.invoke(messages)
+            # add the model's response to the messages list so that the next iteration includes it in the context for generating the next response
+            messages.append(response)
 
-        if not tool_calls:
-            return str(response.content)
+            # check if the model's response includes any tool calls. If not, we can return the content of the response as the final answer. If there are tool calls, we need to execute them and add their results back to the messages list for the next iteration.
+            tool_calls = getattr(response, "tool_calls", None) or []
+
+            if not tool_calls:
+                return str(response.content)
 
         # execute each tool call by looking up the tool by name, invoking it with the provided arguments, 
         # and then adding the result as a ToolMessage to the messages list for the next iteration. 
         # If a tool name is unknown, we add a message indicating that.
-        for tool_call in tool_calls:
+        for index, tool_call in enumerate(tool_calls):
             name = tool_call["name"]
             args = tool_call["args"]
             tool_id = tool_call["id"]
@@ -154,6 +164,11 @@ def run_agent(user, context, history, session):
                     confirmation = side_effects.request_confirmation_if_needed(user, context, session, name, authorization.safe_args)
 
                     if confirmation is not None:
+                        # save the agent state before waiting for confirmation
+                        session[side_effects.PENDING_SIDE_EFFECT_KEY] = {
+                            **session[side_effects.PENDING_SIDE_EFFECT_KEY],
+                            "resume": dict(messages=messages_to_dict(messages), step=step, calls=tool_calls[index:])
+                        }
                         return confirmation
 
                     # normal tools execute immediately

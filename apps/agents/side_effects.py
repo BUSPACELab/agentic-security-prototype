@@ -142,11 +142,19 @@ def confirm_pending_side_effect(user: Any, context: str, session: Any) -> str:
 
     try:
         # execute the exact trusted arguments that were stored earlier
-        return str(selected_tool.invoke(authorization.safe_args))
+        result = selected_tool.invoke(authorization.safe_args)
+        result = str(enforcement.filter_tool_result(context, tool_name, result))
     finally:
         # confirmation is valid for one execution only
         clear_pending_side_effect(session)
 
+    # --- DEBUGGING ---
+    print(f"Tool result: {result}")
+
+    # resume the agent with the result of the confirmed tool call
+    from .service import run_agent
+
+    return run_agent(user, context, [], session, resume={**pending["resume"], "result": result}) if "resume" in pending else result
 
 def clear_pending_side_effect(session: Any) -> bool:
     """Remove the pending side effect from the session."""
