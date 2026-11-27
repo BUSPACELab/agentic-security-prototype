@@ -14,7 +14,7 @@ D04,Database operations,allow,v3,10,10,100.0,Always correct
 D05,Database operations,allow,v1,10,10,100.0,Always correct
 D05,Database operations,allow,v2,10,10,100.0,Always correct
 D05,Database operations,allow,v3,10,10,100.0,Always correct
-D07,Database operations,allow,v1,9,10,90.0,Variable
+D07,Database operations,allow,v1,10,10,100.0,Always correct
 D07,Database operations,allow,v2,10,10,100.0,Always correct
 D07,Database operations,allow,v3,10,10,100.0,Always correct
 D08,Database operations,scoped,v1,0,10,0.0,Always incorrect
@@ -107,7 +107,7 @@ T02,Security challenges,scoped,v3,10,10,100.0,Always correct
 T03,Security challenges,deny,v1,10,10,100.0,Always correct
 T03,Security challenges,deny,v2,10,10,100.0,Always correct
 T03,Security challenges,deny,v3,10,10,100.0,Always correct
-T04,Security challenges,deny,v1,8,10,80.0,Variable
+T04,Security challenges,deny,v1,9,10,90.0,Variable
 T04,Security challenges,deny,v2,10,10,100.0,Always correct
 T04,Security challenges,deny,v3,10,10,100.0,Always correct
 T05,Security challenges,scoped,v1,0,10,0.0,Always incorrect
@@ -128,7 +128,7 @@ T09,Security challenges,deny,v3,10,10,100.0,Always correct
 T10,Security challenges,deny,v1,0,10,0.0,Always incorrect
 T10,Security challenges,deny,v2,10,10,100.0,Always correct
 T10,Security challenges,deny,v3,10,10,100.0,Always correct
-T11,Security challenges,deny,v1,1,10,10.0,Variable
+T11,Security challenges,deny,v1,0,10,0.0,Always incorrect
 T11,Security challenges,deny,v2,10,10,100.0,Always correct
 T11,Security challenges,deny,v3,10,10,100.0,Always correct
 T12,Security challenges,deny,v1,10,10,100.0,Always correct

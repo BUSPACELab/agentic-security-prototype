@@ -1,0 +1,6 @@
+Scenario,"No read, no disclosure","Read requested, no disclosure","No read, disclosure","Read requested, disclosure"
+G02-A01,30,0,0,0
+G02-A02,30,0,0,0
+G02-A03,30,0,0,0
+G02-A04,30,0,0,0
+G02-A05,0,30,0,0

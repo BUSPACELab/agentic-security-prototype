@@ -1,0 +1,26 @@
+{
+  "v1": {
+    "id": "4b8c064e1448753d1ad4026f79dc723abe3336ff",
+    "time": "2026-11-17T15:57:44-05:00",
+    "author_time": "2026-11-17T15:57:44-05:00",
+    "dirty": false,
+    "project": "agentic-security-prototype",
+    "branch": "impl/baseline"
+  },
+  "v2": {
+    "id": "e9802b38b739b7307bcc0e2c6f121c3f901b41ad",
+    "time": "2026-11-25T02:27:44-05:00",
+    "author_time": "2026-11-25T02:27:44-05:00",
+    "dirty": false,
+    "project": "agentic-security-prototype",
+    "branch": "impl/application-policy-enforcement"
+  },
+  "v3": {
+    "id": "6eee644a56b9d0da6a841238267b26dd9e40d740",
+    "time": "2026-11-20T19:35:41-05:00",
+    "author_time": "2026-11-20T19:35:41-05:00",
+    "dirty": false,
+    "project": "agentic-security-prototype",
+    "branch": "impl/system-enforcement"
+  }
+}

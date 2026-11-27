@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKSPACES = ROOT / "workspaces"
+EVALUATION_REQUIREMENTS = ROOT / "requirements.txt"
 
 
 def main():
@@ -17,6 +18,9 @@ def main():
     # Read the repository and branch configuration
     config = json.loads((ROOT / "config" / "versions.json").read_text())
     WORKSPACES.mkdir(exist_ok=True)
+
+    # Install tooling for commands run with the evaluation interpreter.
+    subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(EVALUATION_REQUIREMENTS)], cwd=ROOT, check=True)
 
     manifest = {}
 
@@ -38,7 +42,7 @@ def main():
             subprocess.run([sys.executable, "-m", "venv", str(folder / ".venv")], check=True)
 
         # Install dependencies and initialize Django
-        subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements.txt"], cwd=folder, check=True)
+        subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements.txt", "-r", str(EVALUATION_REQUIREMENTS)], cwd=folder, check=True)
         subprocess.run([str(python), "manage.py", "migrate", "--noinput"], cwd=folder, check=True)
 
         # Record the exact commit used

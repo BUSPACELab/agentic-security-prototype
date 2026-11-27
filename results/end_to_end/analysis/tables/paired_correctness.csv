@@ -1,4 +1,4 @@
 Comparison,Gain,Tie,Loss,Matched,Net gain
-Manual vs Baseline,262,218,20,500,242
-System vs Baseline,262,238,0,500,262
+Manual vs Baseline,261,219,20,500,241
+System vs Baseline,261,239,0,500,261
 System vs Manual,20,480,0,500,20

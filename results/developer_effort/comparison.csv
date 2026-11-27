@@ -1,9 +1,9 @@
 metric,v1,v2,v3
-Application LOC,452,1146,522
+Application LOC,452,1161,522
 MCP client LOC,99,186,103
 MCP server LOC,100,120,84
-Application security LOC,0,837,63
+Application security LOC,0,851,63
 Application policy LOC,0,159,49
-Total LOC,651,1452,709
-Security checks (count),0,71,7
+Total LOC,651,1467,709
+Security checks (count),0,70,7
 Policies (count),0,10,5

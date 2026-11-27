@@ -11,17 +11,19 @@ v2,apps/agents/enforcement.py,security_check,Reject schema missing allowed colum
 v2,apps/agents/enforcement.py,security_check,Block invalid SQL,199,200
 v2,apps/agents/enforcement.py,security_check,Block unknown business action,210,215
 v2,apps/agents/enforcement.py,security_check,Enforce authorization decision,235,243
+v2,apps/agents/service.py,security_code,Import message serialization for confirmation continuation,2,2
 v2,apps/agents/service.py,security_code,Import custom invocation and confirmation enforcement,7,9
-v2,apps/agents/service.py,security_code,Pass authenticated user and session to agent,80,80
+v2,apps/agents/service.py,security_code,Pass authenticated user and session to agent and support resumption,80,80
 v2,apps/agents/service.py,security_code,Select context-authorized tools,90,90
-v2,apps/agents/service.py,security_code,Restrict invocation to exposed tools,138,143
-v2,apps/agents/service.py,security_code,Authorization and confirmation enforcement,148,157
-v2,apps/agents/service.py,security_code,Invoke with authorized arguments,160,160
-v2,apps/agents/service.py,security_code,Filter returned tool data,164,164
-v2,apps/agents/service.py,security_check,Block tool outside exposed set,141,142
-v2,apps/agents/service.py,security_check,Block unauthorized invocation,150,151
-v2,apps/agents/service.py,security_check,Prevent execution pending confirmation,156,157
-v2,apps/agents/side_effects.py,security_code,Application-controlled side-effect confirmation and reauthorization,8,154
+v2,apps/agents/service.py,security_code,Restore agent state and preserve remaining step budget,114,124
+v2,apps/agents/service.py,security_code,Track tool position for confirmation continuation,139,139
+v2,apps/agents/service.py,security_code,Authorization and confirmation enforcement,158,172
+v2,apps/agents/service.py,security_code,Invoke with authorized arguments,175,175
+v2,apps/agents/service.py,security_code,Filter returned tool data,179,179
+v2,apps/agents/service.py,security_check,Block unauthorized invocation,160,161
+v2,apps/agents/service.py,security_check,Prevent execution pending confirmation,166,172
+v2,apps/agents/side_effects.py,security_code,Application-controlled side-effect confirmation and reauthorization,8,149
+v2,apps/agents/side_effects.py,security_code,Resume agent after confirmed execution and clear pending state,155,162
 v2,apps/agents/side_effects.py,security_check,Determine whether operation requires confirmation,48,49
 v2,apps/agents/side_effects.py,security_check,Require explicit confirmation or cancellation command,80,87
 v2,apps/agents/side_effects.py,security_check,Block unrelated messages while confirmation pending,90,91
@@ -60,12 +62,12 @@ v2,apps/authorization/policies.py,policy,Expose file tools in file context,112,1
 v2,apps/authorization/policies.py,policy,Expose profile tools in profile context,122,129
 v2,apps/authorization/policies.py,policy,Owner may list files,134,141
 v2,apps/authorization/policies.py,policy,Owner may search files,144,151
-v2,apps/authorization/policies.py,policy,Owner may read file,155,162
-v2,apps/authorization/policies.py,policy,Owner may delete file,165,172
+v2,apps/authorization/policies.py,policy,Owner may read file,154,161
+v2,apps/authorization/policies.py,policy,Owner may delete file,164,171
 v2,apps/authorization/policies.py,policy,Authenticated user may read schema,177,184
 v2,apps/authorization/policies.py,policy,Owner may read file metadata,187,194
-v2,apps/authorization/policies.py,policy,Owner may read account,198,205
-v2,apps/authorization/policies.py,policy,Owner may update account,208,215
+v2,apps/authorization/policies.py,policy,Owner may read account,197,204
+v2,apps/authorization/policies.py,policy,Owner may update account,207,214
 v2,apps/authorization/sql_validation.py,security_code,"SQL validation, access restrictions and ownership rewriting",4,111
 v2,apps/authorization/sql_validation.py,policy_code,Application-readable and writable columns,21,26
 v2,apps/authorization/sql_validation.py,policy_code,"Allowed table, operation, context and ownership mapping",69,74
@@ -153,6 +155,7 @@ v2,mcp_server/tools/files.py,security_code,Return contained relative file path,6
 v2,mcp_server/tools/files.py,security_code,Return contained relative entries,74,74
 v2,mcp_server/tools/files.py,security_code,Resolve authorized search path,88,88
 v2,mcp_server/tools/files.py,security_code,Return contained relative match,92,92
+v2,mcp_server/tools/files.py,security_code,Search within resolved target path,97,97
 v2,mcp_server/tools/files.py,security_code,Return contained relative matches,104,104
 v2,mcp_server/tools/files.py,security_code,Resolve authorized read path,117,117
 v2,mcp_server/tools/files.py,security_code,Enforce delete containment and protect root,131,135
@@ -164,7 +167,7 @@ v2,mcp_server/tools/files.py,security_check,Prevent deletion of MCP root,134,135
 v3,apps/policies/policy.py,security_code,Application-defined file and database access policies,3,94
 v3,apps/policies/policy.py,policy_code,Application-specific file and database restrictions,12,94
 v3,apps/policies/policy.py,security_check,Restrict file reads by application context,24,25
-v3,apps/policies/policy.py,security_check,Restrict read path to owner directory,32,32
+v3,apps/policies/policy.py,security_check,Restrict file read path to owner directory,32,32
 v3,apps/policies/policy.py,security_check,Restrict file modification by application context,38,39
 v3,apps/policies/policy.py,security_check,Restrict modification to owner or owner-deleted directory,47,47
 v3,apps/policies/policy.py,security_check,Select file-context database read rule,58,65

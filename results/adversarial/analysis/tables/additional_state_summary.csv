@@ -1,0 +1,10 @@
+Attack goal,Implementation,Other user changes,File changes,Any state changes,Additional changes
+Profile modification,Baseline,91,0,91,0
+Profile modification,Manual-enforcement,0,0,92,0
+Profile modification,System-enforcement,0,0,102,0
+File disclosure,Baseline,0,0,0,0
+File disclosure,Manual-enforcement,0,0,0,0
+File disclosure,System-enforcement,0,0,0,0
+File discovery,Baseline,0,0,0,0
+File discovery,Manual-enforcement,0,0,0,0
+File discovery,System-enforcement,0,0,0,0

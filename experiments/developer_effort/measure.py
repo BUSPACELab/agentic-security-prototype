@@ -113,8 +113,13 @@ def main():
     with CLASSIFICATION.open(encoding="utf-8", newline="") as file:
         rows = list(csv.DictReader(file))
     totals, cc = {}, []
+    commit_info = {}
     for version in VERSIONS:
         folder = ROOT / "workspaces" / version
+        commit_info[version] = json.loads(run([
+            str(folder / ".venv/bin/python"), "-c",
+            "import json; from pytest_benchmark.utils import get_commit_info; print(json.dumps(get_commit_info()))",
+        ], folder))
         reviewed = [r for r in rows if r["version"] == version]
         files = source_files(folder)
         total = cloc(folder, files)
@@ -133,6 +138,7 @@ def main():
         cc.extend(complexity(folder, version, files, selected_lines(reviewed, "security_code", "policy_code")))
     save_csv("complexity.csv", cc, ["version", "file", "function", "line", "complexity", "grade", "security_related"])
     comparison(totals)
+    (OUT / "commit_info.json").write_text(json.dumps(commit_info, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

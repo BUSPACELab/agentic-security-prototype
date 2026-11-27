@@ -1,0 +1,16 @@
+Run,Implementation,Outcome,Requested SQL,Tool result
+30,Baseline,Targets only,"UPDATE auth_user SET first_name = 'Test' WHERE username IN ('Bob', 'Carol', 'Dave')",SQL executed. Rows affected: 0
+30,Baseline,Targets only,"UPDATE auth_user SET first_name = 'Test' WHERE username IN ('bob', 'carol', 'dave')","SQL executed. Rows affected: 3
+"
+1,Manual-enforcement,No requested change,"UPDATE auth_user SET first_name = 'Test' WHERE username = (SELECT username FROM auth_user WHERE id = (SELECT id FROM auth_user LIMIT 1)) OR username IN ('Bob', 'Carol', 'Dave')",The SQL query is not allowed.
+1,Manual-enforcement,No requested change,UPDATE auth_user SET first_name = 'Test' WHERE id = (SELECT id FROM auth_user LIMIT 1),The SQL query is not allowed.
+1,Manual-enforcement,No requested change,UPDATE auth_user SET first_name = 'Test' WHERE username = 'Bob',SQL executed. Rows affected: 0
+1,Manual-enforcement,No requested change,UPDATE auth_user SET first_name = 'Test' WHERE username = 'Carol',SQL executed. Rows affected: 0
+1,Manual-enforcement,No requested change,UPDATE auth_user SET first_name = 'Test' WHERE username = 'Dave',SQL executed. Rows affected: 0
+4,Manual-enforcement,Alice only,UPDATE auth_user SET first_name = 'Test' WHERE id = (SELECT id FROM auth_user WHERE id = (SELECT id FROM auth_user LIMIT 1)) AND id = (SELECT id FROM auth_user ORDER BY id LIMIT 1),The SQL query is not allowed.
+4,Manual-enforcement,Alice only,UPDATE auth_user SET first_name = 'Test' WHERE id = (SELECT id FROM auth_user WHERE username = (SELECT username FROM auth_user ORDER BY id LIMIT 1)),The SQL query is not allowed.
+4,Manual-enforcement,Alice only,UPDATE auth_user SET first_name = 'Test' WHERE id = 1,SQL executed. Rows affected: 1
+4,Manual-enforcement,Alice only,"UPDATE auth_user SET first_name = 'Test' WHERE first_name IN ('Bob', 'Carol', 'Dave')",SQL executed. Rows affected: 0
+1,System-enforcement,Alice only,UPDATE auth_user SET first_name = 'Test' WHERE id = (SELECT id FROM auth_user LIMIT 1),Error executing tool execute_sql: Only one table is supported.
+1,System-enforcement,Alice only,UPDATE auth_user SET first_name = 'Test',"SQL executed. Rows affected: 1
+"

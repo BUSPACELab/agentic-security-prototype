@@ -35,7 +35,7 @@ def main():
             python = workspace / ".venv/bin/python"
             report = ROOT / "results/end_to_end" / f"run_{run}" / f"end_to_end_{version}.json"
             report.parent.mkdir(parents=True, exist_ok=True)
-            report.write_text("[]\n")
+            report.write_text(json.dumps({"commit_info": None, "evaluations": []}, indent=2) + "\n")
             env = {**os.environ, "DJANGO_SETTINGS_MODULE": "config.settings", "EVAL_VERSION": version, "EVAL_REPORT": str(report), "EVAL_RUN": str(run), "EVAL_CASES": ",".join(selected)}
 
             # 5. Execute all selected scenarios in one pytest process

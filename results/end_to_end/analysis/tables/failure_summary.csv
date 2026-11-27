@@ -1,5 +1,4 @@
 id,version,incorrect_runs,runs,error_types
-D07,v1,1,4,AssertionError
 D08,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 D09,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 D10,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
@@ -18,12 +17,12 @@ F22,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 F23,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T01,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T02,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
-T04,v1,2,"1, 4",AssertionError
+T04,v1,1,5,AssertionError
 T05,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T08,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T09,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T10,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
-T11,v1,9,"1, 2, 3, 4, 5, 7, 8, 9, 10",AssertionError
+T11,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T13,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T14,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError
 T15,v1,10,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10",AssertionError

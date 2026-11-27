@@ -70,9 +70,9 @@ v2,apps/agents/enforcement.py,account_resource,105,2,A,1
 v2,apps/agents/enforcement.py,file_resource,60,4,A,1
 v2,apps/agents/enforcement.py,file_collection_resource,42,2,A,1
 v2,apps/agents/providers.py,get_chat_model,7,3,A,0
-v2,apps/agents/service.py,run_agent,80,12,C,1
-v2,apps/agents/side_effects.py,clear_pending_side_effect,151,1,A,1
-v2,apps/agents/side_effects.py,confirm_pending_side_effect,96,12,C,1
+v2,apps/agents/service.py,run_agent,80,14,C,1
+v2,apps/agents/side_effects.py,clear_pending_side_effect,159,1,A,1
+v2,apps/agents/side_effects.py,confirm_pending_side_effect,96,13,C,1
 v2,apps/agents/side_effects.py,handle_confirmation_message,70,5,A,1
 v2,apps/agents/side_effects.py,request_confirmation_if_needed,37,6,B,1
 v2,apps/agents/side_effects.py,side_effect_action,23,5,A,1

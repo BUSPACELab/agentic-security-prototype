@@ -5,7 +5,7 @@
   },
   "v2": {
     "branch": "impl/application-policy-enforcement",
-    "commit": "04a5035e74a7a9890dfff802904eeb062a29ca9c"
+    "commit": "e9802b38b739b7307bcc0e2c6f121c3f901b41ad"
   },
   "v3": {
     "branch": "impl/system-enforcement",
